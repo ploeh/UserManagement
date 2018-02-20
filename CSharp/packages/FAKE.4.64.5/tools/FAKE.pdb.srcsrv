@@ -1,0 +1,10 @@
+SRCSRV: ini ------------------------------------------------
+VERSION=2
+SRCSRV: variables ------------------------------------------
+SRCSRVVERCTRL=https
+SRCSRVTRG=https://raw.github.com/fsharp/FAKE/a9064d63f293e08f59a35f1cea156ab28e297018/%var2%
+SRCSRV: source files ---------------------------------------
+D:\code\fake\src\app\FAKE\CommandlineParams.fs*src/app/FAKE/CommandlineParams.fs
+D:\code\fake\src\app\FAKE\Cli.fs*src/app/FAKE/Cli.fs
+D:\code\fake\src\app\FAKE\Program.fs*src/app/FAKE/Program.fs
+SRCSRV: end ------------------------------------------------
