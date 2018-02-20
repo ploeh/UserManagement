@@ -42,9 +42,13 @@
   <ItemGroup>
     <Compile Include="ApiController.cs" />
     <Compile Include="BadRequestErrorMessageResult.cs" />
+    <Compile Include="ConnectionsController.cs" />
     <Compile Include="IHttpActionResult.cs" />
+    <Compile Include="IUserCache.cs" />
+    <Compile Include="IUserRepository.cs" />
     <Compile Include="OkNegotiatedContentResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="User.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
