@@ -25,11 +25,21 @@ namespace Ploeh.Samples.UserManagement
             var user = UserCache.Find(userId);
             if (user == null)
             {
-                user = UserRepository.ReadUser(int.Parse(userId));
+                int userInt;
+                if (int.TryParse(userId, out userInt))
+                {
+                    user = UserRepository.ReadUser(userInt);
+                }
+                else return BadRequest("Invalid user ID.");
             }
+
             UserRepository.Update(user);
 
-            var otherUser = UserRepository.ReadUser(int.Parse(otherUserId));
+            var otherUser = UserCache.Find(otherUserId);
+            if (otherUser == null)
+            {
+                otherUser = UserRepository.ReadUser(int.Parse(otherUserId));
+            }
             user.Connect(otherUser);
             return Ok(otherUser);
         }

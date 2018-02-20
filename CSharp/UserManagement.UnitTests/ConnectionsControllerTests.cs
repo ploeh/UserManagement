@@ -53,5 +53,44 @@ namespace Ploeh.Samples.UserManagement.UnitTests
             repoTD.Verify(r => r.Update(user));
             Assert.Contains(otherUser.Id, user.Connections);
         }
+
+        [Theory, UserManagementTestConventions]
+        public void UsersSuccessfullyConnectWhenOtherUserIsInCache(
+            [Frozen]Mock<IUserCache> cacheTD,
+            [Frozen]Mock<IUserRepository> repoTD,
+            User user,
+            User otherUser,
+            ConnectionsController sut)
+        {
+            cacheTD.Setup(c => c.Find(user.Id.ToString())).Returns((User)null);
+            cacheTD.Setup(c => c.Find(otherUser.Id.ToString())).Returns(otherUser);
+            repoTD.Setup(r => r.ReadUser(user.Id)).Returns(user);
+
+            var actual = sut.Post(user.Id.ToString(), otherUser.Id.ToString());
+
+            var ok = Assert.IsAssignableFrom<OkNegotiatedContentResult<User>>(
+                actual);
+            Assert.Equal(otherUser, ok.Content);
+            repoTD.Verify(r => r.Update(user));
+            Assert.Contains(otherUser.Id, user.Connections);
+        }
+
+        [Theory, UserManagementTestConventions]
+        public void UsersFailToConnectWhenUserIdIsNoInt(
+            [Frozen]Mock<IUserCache> cacheTD,
+            [Frozen]Mock<IUserRepository> repoTD,
+            string userId,
+            User otherUser,
+            ConnectionsController sut)
+        {
+            Assert.False(int.TryParse(userId, out var _));
+            cacheTD.Setup(c => c.Find(userId)).Returns((User)null);
+            cacheTD.Setup(c => c.Find(otherUser.Id.ToString())).Returns(otherUser);
+
+            var actual = sut.Post(userId, otherUser.Id.ToString());
+
+            Assert.IsAssignableFrom<BadRequestErrorMessageResult>(actual);
+            repoTD.Verify(r => r.Update(It.IsAny<User>()), Times.Never());
+        }
     }
 }
