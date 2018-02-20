@@ -8,16 +8,24 @@ namespace Ploeh.Samples.UserManagement
 {
     public class User
     {
+        private readonly List<int> connections;
+
         public User(int id)
         {
-            this.Id = id;
+            Id = id;
+            connections = new List<int>();
         }
 
         public int Id { get; }
-        public string Email { get; set; }
+
+        public IReadOnlyCollection<int> Connections
+        {
+            get { return connections; }
+        }
 
         public void Connect(User otherUser)
         {
+            connections.Add(otherUser.Id);
         }
     }
 }
