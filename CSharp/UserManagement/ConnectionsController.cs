@@ -33,13 +33,19 @@ namespace Ploeh.Samples.UserManagement
                 else return BadRequest("Invalid user ID.");
             }
 
-            UserRepository.Update(user);
-
             var otherUser = UserCache.Find(otherUserId);
             if (otherUser == null)
             {
-                otherUser = UserRepository.ReadUser(int.Parse(otherUserId));
+                int otherUserInt;
+                if (int.TryParse(otherUserId, out otherUserInt))
+                {
+                    otherUser = UserRepository.ReadUser(otherUserInt);
+                }
+                else return BadRequest("Invalid user ID for other user.");
             }
+
+            UserRepository.Update(user);
+
             user.Connect(otherUser);
             return Ok(otherUser);
         }

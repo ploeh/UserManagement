@@ -92,5 +92,23 @@ namespace Ploeh.Samples.UserManagement.UnitTests
             Assert.IsAssignableFrom<BadRequestErrorMessageResult>(actual);
             repoTD.Verify(r => r.Update(It.IsAny<User>()), Times.Never());
         }
+
+        [Theory, UserManagementTestConventions]
+        public void UsersFailToConnectWhenOtherUserIdIsNoInt(
+            [Frozen]Mock<IUserCache> cacheTD,
+            [Frozen]Mock<IUserRepository> repoTD,
+            User user,
+            string otherUserId,
+            ConnectionsController sut)
+        {
+            Assert.False(int.TryParse(otherUserId, out var _));
+            cacheTD.Setup(c => c.Find(user.Id.ToString())).Returns(user);
+            cacheTD.Setup(c => c.Find(otherUserId)).Returns((User)null);
+
+            var actual = sut.Post(user.Id.ToString(), otherUserId);
+
+            Assert.IsAssignableFrom<BadRequestErrorMessageResult>(actual);
+            repoTD.Verify(r => r.Update(It.IsAny<User>()), Times.Never());
+        }
     }
 }
