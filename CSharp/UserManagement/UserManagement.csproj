@@ -40,6 +40,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApiController.cs" />
+    <Compile Include="BadRequestErrorMessageResult.cs" />
+    <Compile Include="IHttpActionResult.cs" />
+    <Compile Include="OkNegotiatedContentResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
