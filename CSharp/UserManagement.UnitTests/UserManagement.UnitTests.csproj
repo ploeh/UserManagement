@@ -37,6 +37,9 @@
     <Reference Include="AutoFixture, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
       <HintPath>..\packages\AutoFixture.4.1.0\lib\net452\AutoFixture.dll</HintPath>
     </Reference>
+    <Reference Include="AutoFixture.AutoMoq, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoFixture.AutoMoq.4.1.0\lib\net452\AutoFixture.AutoMoq.dll</HintPath>
+    </Reference>
     <Reference Include="AutoFixture.Xunit2, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
       <HintPath>..\packages\AutoFixture.Xunit2.4.1.0\lib\net452\AutoFixture.Xunit2.dll</HintPath>
     </Reference>
