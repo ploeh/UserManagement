@@ -29,6 +29,8 @@ namespace Ploeh.Samples.UserManagement
                 if (int.TryParse(userId, out userInt))
                 {
                     user = UserRepository.ReadUser(userInt);
+                    if (user == null)
+                        return BadRequest("User not found.");
                 }
                 else return BadRequest("Invalid user ID.");
             }
@@ -44,9 +46,9 @@ namespace Ploeh.Samples.UserManagement
                 else return BadRequest("Invalid user ID for other user.");
             }
 
+            user.Connect(otherUser);
             UserRepository.Update(user);
 
-            user.Connect(otherUser);
             return Ok(otherUser);
         }
     }
