@@ -23,7 +23,7 @@ namespace Ploeh.Samples.UserManagement
         public IHttpActionResult Post(string userId, string otherUserId)
         {
             User user = null;
-            IUserLookupResult res = LookupUser(userId);
+            object res = LookupUser(userId);
             var foundResult = res as FoundUserLookupResult;
             if (foundResult != null)
                 user = foundResult.User;
@@ -48,9 +48,7 @@ namespace Ploeh.Samples.UserManagement
             return Ok(otherUser);
         }
 
-        public interface IUserLookupResult { }
-
-        public class FoundUserLookupResult : IUserLookupResult
+        public class FoundUserLookupResult
         {
             public FoundUserLookupResult(User user)
             {
@@ -62,11 +60,11 @@ namespace Ploeh.Samples.UserManagement
             public User User { get; }
         }
 
-        public class InvalidIdUserLookupResult : IUserLookupResult { }
+        public class InvalidIdUserLookupResult { }
 
-        public class NotFoundUserLookupResult : IUserLookupResult { }
+        public class NotFoundUserLookupResult { }
 
-        private IUserLookupResult LookupUser(string id)
+        private object LookupUser(string id)
         {
             var user = UserCache.Find(id);
             if (user != null)
