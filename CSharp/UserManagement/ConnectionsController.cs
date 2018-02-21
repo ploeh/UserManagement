@@ -45,7 +45,7 @@ namespace Ploeh.Samples.UserManagement
                     if (otherUser == null)
                         return BadRequest("Other user not found.");
                 }
-                else return BadRequest("Invalid user ID for other user.");
+                else return BadRequest("Invalid ID for other user.");
             }
 
             user.Connect(otherUser);

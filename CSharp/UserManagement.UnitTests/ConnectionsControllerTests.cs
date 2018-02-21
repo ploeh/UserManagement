@@ -89,7 +89,8 @@ namespace Ploeh.Samples.UserManagement.UnitTests
 
             var actual = sut.Post(userId, otherUser.Id.ToString());
 
-            Assert.IsAssignableFrom<BadRequestErrorMessageResult>(actual);
+            var err = Assert.IsAssignableFrom<BadRequestErrorMessageResult>(actual);
+            Assert.Equal("Invalid user ID.", err.Message);
             repoTD.Verify(r => r.Update(It.IsAny<User>()), Times.Never());
         }
 
@@ -107,7 +108,8 @@ namespace Ploeh.Samples.UserManagement.UnitTests
 
             var actual = sut.Post(user.Id.ToString(), otherUserId);
 
-            Assert.IsAssignableFrom<BadRequestErrorMessageResult>(actual);
+            var err = Assert.IsAssignableFrom<BadRequestErrorMessageResult>(actual);
+            Assert.Equal("Invalid ID for other user.", err.Message);
             repoTD.Verify(r => r.Update(It.IsAny<User>()), Times.Never());
         }
 
@@ -126,7 +128,8 @@ namespace Ploeh.Samples.UserManagement.UnitTests
 
             var actual = sut.Post(userId.ToString(), otherUser.Id.ToString());
 
-            Assert.IsAssignableFrom<BadRequestErrorMessageResult>(actual);
+            var err = Assert.IsAssignableFrom<BadRequestErrorMessageResult>(actual);
+            Assert.Equal("User not found.", err.Message);
             repoTD.Verify(r => r.Update(It.IsAny<User>()), Times.Never());
         }
 
@@ -145,7 +148,8 @@ namespace Ploeh.Samples.UserManagement.UnitTests
 
             var actual = sut.Post(user.Id.ToString(), otherUserId.ToString());
 
-            Assert.IsAssignableFrom<BadRequestErrorMessageResult>(actual);
+            var err = Assert.IsAssignableFrom<BadRequestErrorMessageResult>(actual);
+            Assert.Equal("Other user not found.", err.Message);
             repoTD.Verify(r => r.Update(It.IsAny<User>()), Times.Never());
         }
     }
