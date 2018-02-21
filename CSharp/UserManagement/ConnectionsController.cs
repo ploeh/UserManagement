@@ -23,29 +23,25 @@ namespace Ploeh.Samples.UserManagement
         public IHttpActionResult Post(string userId, string otherUserId)
         {
             User user;
-            try
+            switch (LookupUser(userId, out user))
             {
-                user = LookupUser(
-                    userId,
-                    "Invalid user ID.",
-                    "User not found.");
-            }
-            catch (ArgumentException e)
-            {
-                return BadRequest(e.Message);
+                case UserLookupStatus.Found:
+                    break;
+                case UserLookupStatus.NotFound:
+                    return BadRequest("User not found.");
+                case UserLookupStatus.InvalidId:
+                    return BadRequest("Invalid user ID.");
             }
 
             User otherUser;
-            try
+            switch (LookupUser(otherUserId, out otherUser))
             {
-                otherUser = LookupUser(
-                    otherUserId,
-                    "Invalid ID for other user.",
-                    "Other user not found.");
-            }
-            catch (ArgumentException e)
-            {
-                return BadRequest(e.Message);
+                case UserLookupStatus.Found:
+                    break;
+                case UserLookupStatus.NotFound:
+                    return BadRequest("Other user not found.");
+                case UserLookupStatus.InvalidId:
+                    return BadRequest("Invalid ID for other user.");
             }
 
             user.Connect(otherUser);
@@ -54,24 +50,28 @@ namespace Ploeh.Samples.UserManagement
             return Ok(otherUser);
         }
 
-        private User LookupUser(
-            string id,
-            string invalidMessage,
-            string notFoundMessage)
+        public enum UserLookupStatus
         {
-            var user = UserCache.Find(id);
+            Found = 0,
+            NotFound,
+            InvalidId
+        }
+
+        private UserLookupStatus LookupUser(string id, out User user)
+        {
+            user = UserCache.Find(id);
             if (user != null)
-                return user;
+                return UserLookupStatus.Found;
 
             int userInt;
             if (!int.TryParse(id, out userInt))
-                throw new ArgumentException(invalidMessage);
+                return UserLookupStatus.InvalidId;
 
             user = UserRepository.ReadUser(userInt);
             if (user == null)
-                throw new ArgumentException(notFoundMessage);
+                return UserLookupStatus.NotFound;
 
-            return user;
+            return UserLookupStatus.Found;
         }
     }
 }
