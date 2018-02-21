@@ -29,29 +29,60 @@ namespace Ploeh.Samples.UserManagement
                 if (int.TryParse(userId, out userInt))
                 {
                     user = UserRepository.ReadUser(userInt);
-                    if (user == null)
-                        return BadRequest("User not found.");
+                    if (user != null)
+                    {
+                        var otherUser = UserCache.Find(otherUserId);
+                        if (otherUser == null)
+                        {
+                            int otherUserInt;
+                            if (int.TryParse(otherUserId, out otherUserInt))
+                            {
+                                otherUser = UserRepository.ReadUser(otherUserInt);
+                                if (otherUser != null)
+                                {
+                                    user.Connect(otherUser);
+                                    UserRepository.Update(user);
+
+                                    return Ok(otherUser);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            user.Connect(otherUser);
+                            UserRepository.Update(user);
+
+                            return Ok(otherUser);
+                        }
+                    }
+                    else return BadRequest("User not found.");
                 }
                 else return BadRequest("Invalid user ID.");
             }
-
-            var otherUser = UserCache.Find(otherUserId);
-            if (otherUser == null)
+            else
             {
-                int otherUserInt;
-                if (int.TryParse(otherUserId, out otherUserInt))
+                var otherUser = UserCache.Find(otherUserId);
+                if (otherUser == null)
                 {
-                    otherUser = UserRepository.ReadUser(otherUserInt);
-                    if (otherUser == null)
-                        return BadRequest("Other user not found.");
+                    int otherUserInt;
+                    if (int.TryParse(otherUserId, out otherUserInt))
+                    {
+                        otherUser = UserRepository.ReadUser(otherUserInt);
+                        if (otherUser != null)
+                        {
+                            user.Connect(otherUser);
+                            UserRepository.Update(user);
+
+                            return Ok(otherUser);
+                        }
+                        else return BadRequest("Other user not found.");
+                    }
+                    else return BadRequest("Invalid user ID for other user.");
                 }
-                else return BadRequest("Invalid user ID for other user.");
             }
 
-            user.Connect(otherUser);
-            UserRepository.Update(user);
-
-            return Ok(otherUser);
+            // Famous last words:
+            throw new InvalidOperationException("This can't possibly happen!");
         }
     }
 }
