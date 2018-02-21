@@ -22,63 +22,38 @@ namespace Ploeh.Samples.UserManagement
 
         public IHttpActionResult Post(string userId, string otherUserId)
         {
-            User user = null;
-            object res = LookupUser(userId);
-            var foundResult = res as FoundUserLookupResult;
-            if (foundResult != null)
-                user = foundResult.User;
-            if (res is NotFoundUserLookupResult)
-                return BadRequest("User not found.");
-            if (res is InvalidIdUserLookupResult)
-                return BadRequest("Invalid user ID.");
-
-            User otherUser = null;
-            res = LookupUser(otherUserId);
-            foundResult = res as FoundUserLookupResult;
-            if (foundResult != null)
-                otherUser = foundResult.User;
-            if (res is NotFoundUserLookupResult)
-                return BadRequest("Other user not found.");
-            if (res is InvalidIdUserLookupResult)
-                return BadRequest("Invalid ID for other user.");
-
-            user.Connect(otherUser);
-            UserRepository.Update(user);
-
-            return Ok(otherUser);
+            return LookupUser(userId).Match(
+                onInvalidId: BadRequest("Invalid user ID."),
+                onNotFound: BadRequest("User not found."),
+                onFound: user =>
+                {
+                    return LookupUser(otherUserId).Match<IHttpActionResult>(
+                        onInvalidId: BadRequest("Invalid ID for other user."),
+                        onNotFound: BadRequest("Other user not found."),
+                        onFound: otherUser =>
+                        {
+                            user.Connect(otherUser);
+                            UserRepository.Update(user);
+                            return Ok(otherUser);
+                        });
+                });
         }
 
-        public class FoundUserLookupResult
-        {
-            public FoundUserLookupResult(User user)
-            {
-                if (user == null)
-                    throw new ArgumentNullException(nameof(user));
-                User = user;
-            }
-
-            public User User { get; }
-        }
-
-        public class InvalidIdUserLookupResult { }
-
-        public class NotFoundUserLookupResult { }
-
-        private object LookupUser(string id)
+        private IUserLookupResult LookupUser(string id)
         {
             var user = UserCache.Find(id);
             if (user != null)
-                return new FoundUserLookupResult(user);
+                return UserLookupResult.UserFound(user);
 
             int userInt;
             if (!int.TryParse(id, out userInt))
-                return new InvalidIdUserLookupResult();
+                return UserLookupResult.InvalidUserId();
 
             user = UserRepository.ReadUser(userInt);
             if (user == null)
-                return new NotFoundUserLookupResult();
+                return UserLookupResult.UserNotFound();
 
-            return new FoundUserLookupResult(user);
+            return UserLookupResult.UserFound(user);
         }
     }
 }
