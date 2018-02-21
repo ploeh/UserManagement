@@ -129,5 +129,24 @@ namespace Ploeh.Samples.UserManagement.UnitTests
             Assert.IsAssignableFrom<BadRequestErrorMessageResult>(actual);
             repoTD.Verify(r => r.Update(It.IsAny<User>()), Times.Never());
         }
+
+        [Theory, UserManagementTestConventions]
+        public void UsersFailToConnectWhenOtherUserIsInNeitherCacheNorRepo(
+            [Frozen]Mock<IUserCache> cacheTD,
+            [Frozen]Mock<IUserRepository> repoTD,
+            User user,
+            int otherUserId,
+            ConnectionsController sut)
+        {
+            cacheTD.Setup(c => c.Find(user.Id.ToString())).Returns(user);
+            cacheTD.Setup(c => c.Find(otherUserId.ToString())).Returns((User)null);
+            repoTD.Setup(r => r.ReadUser(user.Id)).Returns(user);
+            repoTD.Setup(r => r.ReadUser(otherUserId)).Returns((User)null);
+
+            var actual = sut.Post(user.Id.ToString(), otherUserId.ToString());
+
+            Assert.IsAssignableFrom<BadRequestErrorMessageResult>(actual);
+            repoTD.Verify(r => r.Update(It.IsAny<User>()), Times.Never());
+        }
     }
 }

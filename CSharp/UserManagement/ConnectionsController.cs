@@ -42,6 +42,8 @@ namespace Ploeh.Samples.UserManagement
                 if (int.TryParse(otherUserId, out otherUserInt))
                 {
                     otherUser = UserRepository.ReadUser(otherUserInt);
+                    if (otherUser == null)
+                        return BadRequest("Other user not found.");
                 }
                 else return BadRequest("Invalid user ID for other user.");
             }
