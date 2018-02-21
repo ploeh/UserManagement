@@ -22,36 +22,56 @@ namespace Ploeh.Samples.UserManagement
 
         public IHttpActionResult Post(string userId, string otherUserId)
         {
-            var user = UserCache.Find(userId);
-            if (user == null)
+            User user;
+            try
             {
-                int userInt;
-                if (int.TryParse(userId, out userInt))
-                {
-                    user = UserRepository.ReadUser(userInt);
-                    if (user == null)
-                        return BadRequest("User not found.");
-                }
-                else return BadRequest("Invalid user ID.");
+                user = LookupUser(
+                    userId,
+                    "Invalid user ID.",
+                    "User not found.");
+            }
+            catch (ArgumentException e)
+            {
+                return BadRequest(e.Message);
             }
 
-            var otherUser = UserCache.Find(otherUserId);
-            if (otherUser == null)
+            User otherUser;
+            try
             {
-                int otherUserInt;
-                if (int.TryParse(otherUserId, out otherUserInt))
-                {
-                    otherUser = UserRepository.ReadUser(otherUserInt);
-                    if (otherUser == null)
-                        return BadRequest("Other user not found.");
-                }
-                else return BadRequest("Invalid ID for other user.");
+                otherUser = LookupUser(
+                    otherUserId,
+                    "Invalid ID for other user.",
+                    "Other user not found.");
+            }
+            catch (ArgumentException e)
+            {
+                return BadRequest(e.Message);
             }
 
             user.Connect(otherUser);
             UserRepository.Update(user);
 
             return Ok(otherUser);
+        }
+
+        private User LookupUser(
+            string id,
+            string invalidMessage,
+            string notFoundMessage)
+        {
+            var user = UserCache.Find(id);
+            if (user != null)
+                return user;
+
+            int userInt;
+            if (!int.TryParse(id, out userInt))
+                throw new ArgumentException(invalidMessage);
+
+            user = UserRepository.ReadUser(userInt);
+            if (user == null)
+                throw new ArgumentException(notFoundMessage);
+
+            return user;
         }
     }
 }
