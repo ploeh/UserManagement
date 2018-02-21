@@ -22,10 +22,12 @@ namespace Ploeh.Samples.UserManagement
 
         public IHttpActionResult Post(string userId, string otherUserId)
         {
-            User user;
-            switch (LookupUser(userId, out user))
+            User user = null;
+            var res = LookupUser(userId);
+            switch (res.Status)
             {
                 case UserLookupStatus.Found:
+                    user = res.User;
                     break;
                 case UserLookupStatus.NotFound:
                     return BadRequest("User not found.");
@@ -33,10 +35,12 @@ namespace Ploeh.Samples.UserManagement
                     return BadRequest("Invalid user ID.");
             }
 
-            User otherUser;
-            switch (LookupUser(otherUserId, out otherUser))
+            User otherUser = null;
+            res = LookupUser(otherUserId);
+            switch (res.Status)
             {
                 case UserLookupStatus.Found:
+                    otherUser = res.User;
                     break;
                 case UserLookupStatus.NotFound:
                     return BadRequest("Other user not found.");
@@ -57,21 +61,38 @@ namespace Ploeh.Samples.UserManagement
             InvalidId
         }
 
-        private UserLookupStatus LookupUser(string id, out User user)
+        public class UserLookupResult
         {
-            user = UserCache.Find(id);
+            public UserLookupResult(UserLookupStatus status)
+            {
+                Status = status;
+            }
+
+            public UserLookupResult(UserLookupStatus status, User user)
+            {
+                Status = status;
+                User = user;
+            }
+
+            public UserLookupStatus Status { get; }
+            public User User { get; }
+        }
+
+        private UserLookupResult LookupUser(string id)
+        {
+            var user = UserCache.Find(id);
             if (user != null)
-                return UserLookupStatus.Found;
+                return new UserLookupResult(UserLookupStatus.Found, user);
 
             int userInt;
             if (!int.TryParse(id, out userInt))
-                return UserLookupStatus.InvalidId;
+                return new UserLookupResult(UserLookupStatus.InvalidId);
 
             user = UserRepository.ReadUser(userInt);
             if (user == null)
-                return UserLookupStatus.NotFound;
+                return new UserLookupResult(UserLookupStatus.NotFound);
 
-            return UserLookupStatus.Found;
+            return new UserLookupResult(UserLookupStatus.Found, user);
         }
     }
 }
