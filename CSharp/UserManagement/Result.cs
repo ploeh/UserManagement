@@ -44,5 +44,32 @@ namespace Ploeh.Samples.UserManagement
                 return Error<S, E2>(selector(error));
             }
         }
+
+        public static IResult<S2, E> Select<S1, S2, E>(
+            this IResult<S1, E> source,
+            Func<S1, S2> selector)
+        {
+            return source.Accept(new SelectResultVisitor<S1, S2, E>(selector));
+        }
+
+        private class SelectResultVisitor<S1, S2, E> : IResultVisitor<S1, E, IResult<S2, E>>
+        {
+            private readonly Func<S1, S2> selector;
+
+            public SelectResultVisitor(Func<S1, S2> selector)
+            {
+                this.selector = selector;
+            }
+
+            public IResult<S2, E> VisitSuccess(S1 success)
+            {
+                return Success<S2, E>(selector(success));
+            }
+
+            public IResult<S2, E> VisitError(E error)
+            {
+                return Error<S2, E>(error);
+            }
+        }
     }
 }

@@ -31,85 +31,35 @@ namespace Ploeh.Samples.UserManagement
                     onInvalidId: "Invalid ID for other user.",
                     onNotFound:  "Other user not found.")));
 
-            var combinedRes =
-                userRes.Accept(new UserLookupResultVisitor(otherUserRes));
+            var connect =
+                userRes.Select(
+                    user => otherUserRes.Select(otherUser =>
+                    {
+                        user.Connect(otherUser);
+                        UserRepository.Update(user);
 
-            return combinedRes.Accept(new TwoUsersLookupToHttpVisitor(this));
+                        return otherUser;
+                    }));
+
+            return connect
+                .SelectError(error => BadRequest(error))
+                .Select(r => r.SelectError(error => BadRequest(error)))
+                .Select(r => r.Select(u => Ok(u)))
+                .Select(r => r.Accept(new ResultToHttpResultVisitor()))
+                .Accept(new ResultToHttpResultVisitor());
         }
 
-        private class UserLookupResultVisitor : 
-            IResultVisitor<User, string, IResult<Tuple<User, User>, string>>
+        private class ResultToHttpResultVisitor :
+            IResultVisitor<IHttpActionResult, IHttpActionResult, IHttpActionResult>
         {
-            private readonly IResult<User, string> otherUserRes;
-
-            public UserLookupResultVisitor(
-                IResult<User, string> otherUserRes)
+            public IHttpActionResult VisitError(IHttpActionResult error)
             {
-                this.otherUserRes = otherUserRes;
+                return error;
             }
 
-            public IResult<Tuple<User, User>, string> VisitSuccess(
-                User user)
+            public IHttpActionResult VisitSuccess(IHttpActionResult success)
             {
-                return otherUserRes.Accept(
-                    new FirstUserFoundLookupResultVisitor(user));
-            }
-
-            public IResult<Tuple<User, User>, string> VisitError(
-                string error)
-            {
-                return Result.Error<Tuple<User, User>, string>(error);
-            }
-        }
-
-        private class FirstUserFoundLookupResultVisitor :
-            IResultVisitor<User, string, IResult<Tuple<User, User>, string>>
-        {
-            private readonly User firstUser;
-
-            public FirstUserFoundLookupResultVisitor(User firstUser)
-            {
-                this.firstUser = firstUser;
-            }
-
-            public IResult<Tuple<User, User>, string> VisitSuccess(
-                User user)
-            {
-                return Result.Success<Tuple<User, User>, string>(
-                    Tuple.Create(firstUser, user));
-            }
-
-            public IResult<Tuple<User, User>, string> VisitError(
-                string error)
-            {
-                return Result.Error<Tuple<User, User>, string>(error);
-            }
-        }
-
-        private class TwoUsersLookupToHttpVisitor :
-            IResultVisitor<Tuple<User, User>, string, IHttpActionResult>
-        {
-            private readonly ConnectionsController controller;
-
-            public TwoUsersLookupToHttpVisitor(ConnectionsController controller)
-            {
-                this.controller = controller;
-            }
-
-            public IHttpActionResult VisitSuccess(Tuple<User, User> t)
-            {
-                var user = t.Item1;
-                var otherUser = t.Item2;
-
-                user.Connect(otherUser);
-                controller.UserRepository.Update(user);
-
-                return controller.Ok(otherUser);
-            }
-
-            public IHttpActionResult VisitError(string error)
-            {
-                return controller.BadRequest(error);
+                return success;
             }
         }
 
