@@ -109,6 +109,14 @@ namespace Ploeh.Samples.UserManagement
                     .SelectMany(y => Success<S2, E>(s(x, y))));
         }
 
+        public static IResult<S2, E2> SelectBoth<S1, S2, E1, E2>(
+            this IResult<S1, E1> source,
+            Func<S1, S2> successSelector,
+            Func<E1, E2> errorSelector)
+        {
+            return source.Select(successSelector).SelectError(errorSelector);
+        }
+
         public static T Bifold<T>(this IResult<T, T> source)
         {
             return source.Accept(new BifoldResultVisitor<T>());

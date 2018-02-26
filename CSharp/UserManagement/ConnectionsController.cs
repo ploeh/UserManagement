@@ -36,10 +36,7 @@ namespace Ploeh.Samples.UserManagement
                 from otherUser in otherUserRes
                 select Connect(user, otherUser);
 
-            return connect
-                .SelectError(BadRequest)
-                .Select(Ok)
-                .Bifold();
+            return connect.SelectBoth(Ok, BadRequest).Bifold();
         }
 
         private User Connect(User user, User otherUser)
