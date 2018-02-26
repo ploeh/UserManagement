@@ -32,19 +32,22 @@ namespace Ploeh.Samples.UserManagement
                     onNotFound:  "Other user not found.")));
 
             var connect =
-                userRes.SelectMany(
-                    user => otherUserRes.Select(otherUser =>
-                    {
-                        user.Connect(otherUser);
-                        UserRepository.Update(user);
-
-                        return otherUser;
-                    }));
+                from user in userRes
+                from otherUser in otherUserRes
+                select Connect(user, otherUser);
 
             return connect
                 .SelectError(error => BadRequest(error))
                 .Select(u => Ok(u))
                 .Bifold();
+        }
+
+        private User Connect(User user, User otherUser)
+        {
+            user.Connect(otherUser);
+            UserRepository.Update(user);
+
+            return otherUser;
         }
 
         private IResult<User, IUserLookupError> LookupUser(string id)

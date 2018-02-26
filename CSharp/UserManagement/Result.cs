@@ -99,6 +99,16 @@ namespace Ploeh.Samples.UserManagement
             return source.Select(selector).Join();
         }
 
+        public static IResult<S2, E> SelectMany<S1, S2, U, E>(
+            this IResult<S1, E> source,
+            Func<S1, IResult<U, E>> k,
+            Func<S1, U, S2> s)
+        {
+            return source
+                .SelectMany(x => k(x)
+                    .SelectMany(y => Success<S2, E>(s(x, y))));
+        }
+
         public static T Bifold<T>(this IResult<T, T> source)
         {
             return source.Accept(new BifoldResultVisitor<T>());
