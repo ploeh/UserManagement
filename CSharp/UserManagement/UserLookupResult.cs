@@ -13,14 +13,9 @@ namespace Ploeh.Samples.UserManagement
             return new SuccessUserLookupResult<S>(success);
         }
 
-        public static IUserLookupResult<User> InvalidUserId()
+        public static IUserLookupResult<S> Error<S>(IUserLookupError error)
         {
-            return new InvalidIdUserLookupResult<User>();
-        }
-
-        public static IUserLookupResult<User> UserNotFound()
-        {
-            return new NotFoundUserLookupResult<User>();
+            return new ErrorUserLookupResult<S>(error);
         }
     }
 }
