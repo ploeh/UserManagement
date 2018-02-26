@@ -37,8 +37,8 @@ namespace Ploeh.Samples.UserManagement
                 select Connect(user, otherUser);
 
             return connect
-                .SelectError(error => BadRequest(error))
-                .Select(u => Ok(u))
+                .SelectError(BadRequest)
+                .Select(Ok)
                 .Bifold();
         }
 
