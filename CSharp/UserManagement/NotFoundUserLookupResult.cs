@@ -9,7 +9,7 @@ namespace Ploeh.Samples.UserManagement
     internal class NotFoundUserLookupResult : IUserLookupResult
     {
         public TResult Match<TResult>(
-            UserLookupResultParameters<TResult> parameters)
+            IUserLookupResultParameters<TResult> parameters)
         {
             return parameters.OnNotFound;
         }

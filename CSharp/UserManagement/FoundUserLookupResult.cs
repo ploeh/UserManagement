@@ -16,7 +16,7 @@ namespace Ploeh.Samples.UserManagement
         }
 
         public TResult Match<TResult>(
-            UserLookupResultParameters<TResult> parameters)
+            IUserLookupResultParameters<TResult> parameters)
         {
             return parameters.OnFound(user);
         }

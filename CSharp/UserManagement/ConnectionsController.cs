@@ -25,16 +25,8 @@ namespace Ploeh.Samples.UserManagement
             var userRes = LookupUser(userId);
             var otherUserRes = LookupUser(otherUserId);
 
-            var combinedRes = userRes.Match(
-                new UserLookupResultParameters<ITwoUsersLookupResult>(
-                    onInvalidId: TwoUsersLookupResult.FirstUserIdInvalid(),
-                    onNotFound: TwoUsersLookupResult.FirstUserNotFound(),
-                    onFound: user => otherUserRes.Match(
-                        new UserLookupResultParameters<ITwoUsersLookupResult>(
-                            onInvalidId: TwoUsersLookupResult.SecondUserIdInvalid(),
-                            onNotFound: TwoUsersLookupResult.SecondUserNotFound(),
-                            onFound: otherUser =>
-                                TwoUsersLookupResult.BothFound(user, otherUser)))));
+            var combinedRes =
+                userRes.Match(new UserLookupResultParameters(otherUserRes));
 
             return combinedRes.Match(
                 new TwoUsersLookupResultParameters<IHttpActionResult>(
@@ -49,6 +41,59 @@ namespace Ploeh.Samples.UserManagement
 
                         return Ok(otherUser);
                     }));
+        }
+
+        private class UserLookupResultParameters : 
+            IUserLookupResultParameters<ITwoUsersLookupResult>
+        {
+            private readonly IUserLookupResult otherUserRes;
+
+            public UserLookupResultParameters(IUserLookupResult otherUserRes)
+            {
+                this.otherUserRes = otherUserRes;
+            }
+
+            public ITwoUsersLookupResult OnFound(User user)
+            {
+                return otherUserRes.Match(
+                    new FirstUserFoundLookupResultParameters(user));
+            }
+
+            public ITwoUsersLookupResult OnInvalidId
+            {
+                get { return TwoUsersLookupResult.FirstUserIdInvalid(); }
+            }
+
+            public ITwoUsersLookupResult OnNotFound
+            {
+                get { return TwoUsersLookupResult.FirstUserNotFound(); }
+            }
+        }
+
+        private class FirstUserFoundLookupResultParameters : 
+            IUserLookupResultParameters<ITwoUsersLookupResult>
+        {
+            private readonly User firstUser;
+
+            public FirstUserFoundLookupResultParameters(User firstUser)
+            {
+                this.firstUser = firstUser;
+            }
+
+            public ITwoUsersLookupResult OnFound(User user)
+            {
+                return TwoUsersLookupResult.BothFound(firstUser, user);
+            }
+
+            public ITwoUsersLookupResult OnInvalidId
+            {
+                get { return TwoUsersLookupResult.SecondUserIdInvalid(); }
+            }
+
+            public ITwoUsersLookupResult OnNotFound
+            {
+                get { return TwoUsersLookupResult.SecondUserNotFound(); }
+            }
         }
 
         private IUserLookupResult LookupUser(string id)
