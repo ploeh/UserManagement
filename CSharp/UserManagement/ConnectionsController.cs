@@ -42,10 +42,9 @@ namespace Ploeh.Samples.UserManagement
                     }));
 
             return connect
+                .Join()
                 .SelectError(error => BadRequest(error))
-                .Select(r => r.SelectError(error => BadRequest(error)))
-                .Select(r => r.Select(u => Ok(u)))
-                .Select(r => r.Bifold())
+                .Select(u => Ok(u))
                 .Bifold();
         }
 

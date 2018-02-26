@@ -72,6 +72,26 @@ namespace Ploeh.Samples.UserManagement
             }
         }
 
+        public static IResult<S, E> Join<S, E>(
+            this IResult<IResult<S, E>, E> source)
+        {
+            return source.Accept(new JoinResultVisitor<S, E>());
+        }
+
+        private class JoinResultVisitor<S, E> :
+            IResultVisitor<IResult<S, E>, E, IResult<S, E>>
+        {
+            public IResult<S, E> VisitError(E error)
+            {
+                return Error<S, E>(error);
+            }
+
+            public IResult<S, E> VisitSuccess(IResult<S, E> success)
+            {
+                return success;
+            }
+        }
+
         public static T Bifold<T>(this IResult<T, T> source)
         {
             return source.Accept(new BifoldResultVisitor<T>());
