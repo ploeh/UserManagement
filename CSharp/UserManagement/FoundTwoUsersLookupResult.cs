@@ -17,10 +17,10 @@ namespace Ploeh.Samples.UserManagement
             this.user2 = user2;
         }
 
-        public TResult Match<TResult>(
-            ITwoUsersLookupResultParameters<TResult> parameters)
+        public TResult Accept<TResult>(
+            ITwoUsersLookupResultVisitor<TResult> visitor)
         {
-            return parameters.OnBothFound(user1, user2);
+            return visitor.VisitBothFound(user1, user2);
         }
     }
 }

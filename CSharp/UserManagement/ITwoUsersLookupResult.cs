@@ -8,7 +8,6 @@ namespace Ploeh.Samples.UserManagement
 {
     public interface ITwoUsersLookupResult
     {
-        TResult Match<TResult>(
-            ITwoUsersLookupResultParameters<TResult> parameters);
+        TResult Accept<TResult>(ITwoUsersLookupResultVisitor<TResult> visitor);
     }
 }

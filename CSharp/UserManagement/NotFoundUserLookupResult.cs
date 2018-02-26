@@ -8,10 +8,9 @@ namespace Ploeh.Samples.UserManagement
 {
     internal class NotFoundUserLookupResult : IUserLookupResult
     {
-        public TResult Match<TResult>(
-            IUserLookupResultParameters<TResult> parameters)
+        public TResult Accept<TResult>(IUserLookupResultVisitor<TResult> visitor)
         {
-            return parameters.OnNotFound;
+            return visitor.VisitNotFound;
         }
     }
 }

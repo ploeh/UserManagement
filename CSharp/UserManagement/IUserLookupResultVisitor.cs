@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Ploeh.Samples.UserManagement
 {
-    public interface IUserLookupResultParameters<TResult>
+    public interface IUserLookupResultVisitor<TResult>
     {
-        TResult OnFound(User user);
-        TResult OnInvalidId { get; }
-        TResult OnNotFound { get; }
+        TResult VisitFound(User user);
+        TResult VisitInvalidId { get; }
+        TResult VisitNotFound { get; }
     }
 }

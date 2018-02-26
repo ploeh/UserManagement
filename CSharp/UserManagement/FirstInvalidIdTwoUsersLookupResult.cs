@@ -8,10 +8,10 @@ namespace Ploeh.Samples.UserManagement
 {
     internal class FirstInvalidIdTwoUsersLookupResult : ITwoUsersLookupResult
     {
-        public TResult Match<TResult>(
-            ITwoUsersLookupResultParameters<TResult> parameters)
+        public TResult Accept<TResult>(
+            ITwoUsersLookupResultVisitor<TResult> visitor)
         {
-            return parameters.OnFirstInvalidId;
+            return visitor.VisitFirstInvalidId;
         }
     }
 }

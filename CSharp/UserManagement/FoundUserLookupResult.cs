@@ -15,10 +15,9 @@ namespace Ploeh.Samples.UserManagement
             this.user = user;
         }
 
-        public TResult Match<TResult>(
-            IUserLookupResultParameters<TResult> parameters)
+        public TResult Accept<TResult>(IUserLookupResultVisitor<TResult> visitor)
         {
-            return parameters.OnFound(user);
+            return visitor.VisitFound(user);
         }
     }
 }
