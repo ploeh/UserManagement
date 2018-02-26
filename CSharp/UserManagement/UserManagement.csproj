@@ -61,6 +61,7 @@
     <Compile Include="TwoUsersLookupResult.cs" />
     <Compile Include="User.cs" />
     <Compile Include="UserLookupResult.cs" />
+    <Compile Include="UserLookupResultParameters.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

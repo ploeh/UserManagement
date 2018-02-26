@@ -16,11 +16,9 @@ namespace Ploeh.Samples.UserManagement
         }
 
         public TResult Match<TResult>(
-            Func<User, TResult> onFound,
-            TResult onInvalidId,
-            TResult onNotFound)
+            UserLookupResultParameters<TResult> parameters)
         {
-            return onFound(user);
+            return parameters.OnFound(user);
         }
     }
 }

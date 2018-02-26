@@ -8,9 +8,6 @@ namespace Ploeh.Samples.UserManagement
 {
     public interface IUserLookupResult
     {
-        TResult Match<TResult>(
-            Func<User, TResult> onFound,
-            TResult onInvalidId,
-            TResult onNotFound);
+        TResult Match<TResult>(UserLookupResultParameters<TResult> parameters);
     }
 }

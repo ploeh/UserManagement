@@ -26,13 +26,15 @@ namespace Ploeh.Samples.UserManagement
             var otherUserRes = LookupUser(otherUserId);
 
             var combinedRes = userRes.Match(
-                onInvalidId: TwoUsersLookupResult.FirstUserIdInvalid(),
-                onNotFound: TwoUsersLookupResult.FirstUserNotFound(),
-                onFound: user => otherUserRes.Match(
-                    onInvalidId: TwoUsersLookupResult.SecondUserIdInvalid(),
-                    onNotFound: TwoUsersLookupResult.SecondUserNotFound(),
-                    onFound: otherUser =>
-                        TwoUsersLookupResult.BothFound(user, otherUser)));
+                new UserLookupResultParameters<ITwoUsersLookupResult>(
+                    onInvalidId: TwoUsersLookupResult.FirstUserIdInvalid(),
+                    onNotFound: TwoUsersLookupResult.FirstUserNotFound(),
+                    onFound: user => otherUserRes.Match(
+                        new UserLookupResultParameters<ITwoUsersLookupResult>(
+                            onInvalidId: TwoUsersLookupResult.SecondUserIdInvalid(),
+                            onNotFound: TwoUsersLookupResult.SecondUserNotFound(),
+                            onFound: otherUser =>
+                                TwoUsersLookupResult.BothFound(user, otherUser)))));
 
             return combinedRes.Match<IHttpActionResult>(
                 onFirstInvalidId: BadRequest("Invalid user ID."),
