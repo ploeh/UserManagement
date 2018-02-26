@@ -18,13 +18,9 @@ namespace Ploeh.Samples.UserManagement
         }
 
         public TResult Match<TResult>(
-            Func<User, User, TResult> onBothFound,
-            TResult onFirstInvalidId,
-            TResult onFirstNotFound,
-            TResult onSecondInvalidId,
-            TResult onSecondNotFound)
+            TwoUsersLookupResultParameters<TResult> parameters)
         {
-            return onBothFound(user1, user2);
+            return parameters.OnBothFound(user1, user2);
         }
     }
 }

@@ -36,18 +36,19 @@ namespace Ploeh.Samples.UserManagement
                             onFound: otherUser =>
                                 TwoUsersLookupResult.BothFound(user, otherUser)))));
 
-            return combinedRes.Match<IHttpActionResult>(
-                onFirstInvalidId: BadRequest("Invalid user ID."),
-                onFirstNotFound: BadRequest("User not found."),
-                onSecondInvalidId: BadRequest("Invalid ID for other user."),
-                onSecondNotFound: BadRequest("Other user not found."),
-                onBothFound: (user, otherUser) =>
-                {
-                    user.Connect(otherUser);
-                    UserRepository.Update(user);
+            return combinedRes.Match(
+                new TwoUsersLookupResultParameters<IHttpActionResult>(
+                    onFirstInvalidId: BadRequest("Invalid user ID."),
+                    onFirstNotFound: BadRequest("User not found."),
+                    onSecondInvalidId: BadRequest("Invalid ID for other user."),
+                    onSecondNotFound: BadRequest("Other user not found."),
+                    onBothFound: (user, otherUser) =>
+                    {
+                        user.Connect(otherUser);
+                        UserRepository.Update(user);
 
-                    return Ok(otherUser);
-                });
+                        return Ok(otherUser);
+                    }));
         }
 
         private IUserLookupResult LookupUser(string id)

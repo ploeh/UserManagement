@@ -9,13 +9,9 @@ namespace Ploeh.Samples.UserManagement
     internal class SecondNotFoundTwoUsersLookupResult : ITwoUsersLookupResult
     {
         public TResult Match<TResult>(
-            Func<User, User, TResult> onBothFound,
-            TResult onFirstInvalidId,
-            TResult onFirstNotFound,
-            TResult onSecondInvalidId,
-            TResult onSecondNotFound)
+            TwoUsersLookupResultParameters<TResult> parameters)
         {
-            return onSecondNotFound;
+            return parameters.OnSecondNotFound;
         }
     }
 }
