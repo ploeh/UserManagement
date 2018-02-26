@@ -59,7 +59,7 @@
     <Compile Include="OkNegotiatedContentResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TwoUsersLookupResult.cs" />
-    <Compile Include="TwoUsersLookupResultParameters.cs" />
+    <Compile Include="ITwoUsersLookupResultParameters.cs" />
     <Compile Include="User.cs" />
     <Compile Include="UserLookupResult.cs" />
     <Compile Include="IUserLookupResultParameters.cs" />

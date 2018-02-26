@@ -18,7 +18,7 @@ namespace Ploeh.Samples.UserManagement
         }
 
         public TResult Match<TResult>(
-            TwoUsersLookupResultParameters<TResult> parameters)
+            ITwoUsersLookupResultParameters<TResult> parameters)
         {
             return parameters.OnBothFound(user1, user2);
         }

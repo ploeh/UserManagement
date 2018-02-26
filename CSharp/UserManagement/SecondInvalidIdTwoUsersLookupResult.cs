@@ -9,7 +9,7 @@ namespace Ploeh.Samples.UserManagement
     internal class SecondInvalidIdTwoUsersLookupResult : ITwoUsersLookupResult
     {
         public TResult Match<TResult>(
-            TwoUsersLookupResultParameters<TResult> parameters)
+            ITwoUsersLookupResultParameters<TResult> parameters)
         {
             return parameters.OnSecondInvalidId;
         }

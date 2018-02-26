@@ -28,19 +28,7 @@ namespace Ploeh.Samples.UserManagement
             var combinedRes =
                 userRes.Match(new UserLookupResultParameters(otherUserRes));
 
-            return combinedRes.Match(
-                new TwoUsersLookupResultParameters<IHttpActionResult>(
-                    onFirstInvalidId: BadRequest("Invalid user ID."),
-                    onFirstNotFound: BadRequest("User not found."),
-                    onSecondInvalidId: BadRequest("Invalid ID for other user."),
-                    onSecondNotFound: BadRequest("Other user not found."),
-                    onBothFound: (user, otherUser) =>
-                    {
-                        user.Connect(otherUser);
-                        UserRepository.Update(user);
-
-                        return Ok(otherUser);
-                    }));
+            return combinedRes.Match(new TwoUsersLookupToHttpParameters(this));
         }
 
         private class UserLookupResultParameters : 
@@ -93,6 +81,46 @@ namespace Ploeh.Samples.UserManagement
             public ITwoUsersLookupResult OnNotFound
             {
                 get { return TwoUsersLookupResult.SecondUserNotFound(); }
+            }
+        }
+
+        private class TwoUsersLookupToHttpParameters : 
+            ITwoUsersLookupResultParameters<IHttpActionResult>
+        {
+            private readonly ConnectionsController controller;
+
+            public TwoUsersLookupToHttpParameters(
+                ConnectionsController controller)
+            {
+                this.controller = controller;
+            }
+
+            public IHttpActionResult OnBothFound(User user1, User user2)
+            {
+                user1.Connect(user2);
+                controller.UserRepository.Update(user1);
+
+                return controller.Ok(user2);
+            }
+
+            public IHttpActionResult OnFirstInvalidId
+            {
+                get { return controller.BadRequest("Invalid user ID."); }
+            }
+
+            public IHttpActionResult OnFirstNotFound
+            {
+                get { return controller.BadRequest("User not found."); }
+            }
+
+            public IHttpActionResult OnSecondInvalidId
+            {
+                get { return controller.BadRequest("Invalid ID for other user."); }
+            }
+
+            public IHttpActionResult OnSecondNotFound
+            {
+                get { return controller.BadRequest("Other user not found."); }
             }
         }
 
