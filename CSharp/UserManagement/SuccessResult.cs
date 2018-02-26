@@ -6,16 +6,16 @@ using System.Threading.Tasks;
 
 namespace Ploeh.Samples.UserManagement
 {
-    internal class SuccessUserLookupResult<S, E> : IUserLookupResult<S, E>
+    internal class SuccessResult<S, E> : IResult<S, E>
     {
         private readonly S success;
 
-        public SuccessUserLookupResult(S success)
+        public SuccessResult(S success)
         {
             this.success = success;
         }
 
-        public TResult Accept<TResult>(IUserLookupResultVisitor<S, E, TResult> visitor)
+        public TResult Accept<TResult>(IResultVisitor<S, E, TResult> visitor)
         {
             return visitor.VisitSuccess(success);
         }
