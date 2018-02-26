@@ -50,9 +50,10 @@ namespace Ploeh.Samples.UserManagement
             public ITwoUsersLookupResult<Tuple<User, User>> VisitError(
                 IUserLookupError error)
             {
-                return error.Accept(UserLookupError.Switch(
-                    onInvalidId: TwoUsersLookupResult.FirstUserIdInvalid(),
-                    onNotFound:  TwoUsersLookupResult.FirstUserNotFound()));
+                return TwoUsersLookupResult.Error<Tuple<User, User>>(
+                    error.Accept(UserLookupError.Switch(
+                        onInvalidId: "Invalid user ID.",
+                        onNotFound:  "User not found.")));
             }
         }
 
@@ -74,9 +75,10 @@ namespace Ploeh.Samples.UserManagement
             public ITwoUsersLookupResult<Tuple<User, User>> VisitError(
                 IUserLookupError error)
             {
-                return error.Accept(UserLookupError.Switch(
-                    onInvalidId: TwoUsersLookupResult.SecondUserIdInvalid(),
-                    onNotFound:  TwoUsersLookupResult.SecondUserNotFound()));
+                return TwoUsersLookupResult.Error<Tuple<User, User>>(
+                    error.Accept(UserLookupError.Switch(
+                        onInvalidId: "Invalid ID for other user.",
+                        onNotFound:  "Other user not found.")));
             }
         }
 
@@ -101,24 +103,9 @@ namespace Ploeh.Samples.UserManagement
                 return controller.Ok(otherUser);
             }
 
-            public IHttpActionResult VisitFirstInvalidId
+            public IHttpActionResult VisitError(string error)
             {
-                get { return controller.BadRequest("Invalid user ID."); }
-            }
-
-            public IHttpActionResult VisitFirstNotFound
-            {
-                get { return controller.BadRequest("User not found."); }
-            }
-
-            public IHttpActionResult VisitSecondInvalidId
-            {
-                get { return controller.BadRequest("Invalid ID for other user."); }
-            }
-
-            public IHttpActionResult VisitSecondNotFound
-            {
-                get { return controller.BadRequest("Other user not found."); }
+                return controller.BadRequest(error);
             }
         }
 

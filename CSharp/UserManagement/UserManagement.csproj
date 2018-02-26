@@ -43,15 +43,12 @@
     <Compile Include="ApiController.cs" />
     <Compile Include="BadRequestErrorMessageResult.cs" />
     <Compile Include="ConnectionsController.cs" />
+    <Compile Include="ErrorTwoUsersLookupResult.cs" />
     <Compile Include="ErrorUserLookupResult.cs" />
     <Compile Include="InvalidIdUserLookupError.cs" />
     <Compile Include="IUserLookupError.cs" />
     <Compile Include="IUserLookupErrorVisitor.cs" />
     <Compile Include="NotFoundUserLookupError.cs" />
-    <Compile Include="SecondNotFoundTwoUsersLookupResult.cs" />
-    <Compile Include="FirstNotFoundTwoUsersLookupResult.cs" />
-    <Compile Include="SecondInvalidIdTwoUsersLookupResult.cs" />
-    <Compile Include="FirstInvalidIdTwoUsersLookupResult.cs" />
     <Compile Include="SuccessTwoUsersLookupResult.cs" />
     <Compile Include="SuccessUserLookupResult.cs" />
     <Compile Include="IHttpActionResult.cs" />

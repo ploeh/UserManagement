@@ -9,9 +9,6 @@ namespace Ploeh.Samples.UserManagement
     public interface ITwoUsersLookupResultVisitor<S, TResult>
     {
         TResult VisitSuccess(S success);
-        TResult VisitFirstInvalidId { get; }
-        TResult VisitFirstNotFound { get; }
-        TResult VisitSecondInvalidId { get; }
-        TResult VisitSecondNotFound { get; }
+        TResult VisitError(string error);
     }
 }

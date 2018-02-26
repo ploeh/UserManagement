@@ -13,24 +13,10 @@ namespace Ploeh.Samples.UserManagement
             return new SuccessTwoUsersLookupResult<S>(success);
         }
 
-        public static ITwoUsersLookupResult<Tuple<User, User>> FirstUserIdInvalid()
+        public static ITwoUsersLookupResult<Tuple<User, User>> Error<S>(
+            string error)
         {
-            return new FirstInvalidIdTwoUsersLookupResult<Tuple<User, User>>();
-        }
-
-        public static ITwoUsersLookupResult<Tuple<User, User>> FirstUserNotFound()
-        {
-            return new FirstNotFoundTwoUsersLookupResult<Tuple<User, User>>();
-        }
-
-        public static ITwoUsersLookupResult<Tuple<User, User>> SecondUserIdInvalid()
-        {
-            return new SecondInvalidIdTwoUsersLookupResult<Tuple<User, User>>();
-        }
-
-        public static ITwoUsersLookupResult<Tuple<User, User>> SecondUserNotFound()
-        {
-            return new SecondNotFoundTwoUsersLookupResult<Tuple<User, User>>();
+            return new ErrorTwoUsersLookupResult<Tuple<User, User>>(error);
         }
     }
 }
