@@ -25,20 +25,26 @@ namespace Ploeh.Samples.UserManagement
             var userRes = LookupUser(userId);
             var otherUserRes = LookupUser(otherUserId);
 
-            return userRes.Match(
-                onInvalidId: BadRequest("Invalid user ID."),
-                onNotFound: BadRequest("User not found."),
-                onFound: user =>
+            var combinedRes = userRes.Match(
+                onInvalidId: TwoUsersLookupResult.FirstUserIdInvalid(),
+                onNotFound: TwoUsersLookupResult.FirstUserNotFound(),
+                onFound: user => otherUserRes.Match(
+                    onInvalidId: TwoUsersLookupResult.SecondUserIdInvalid(),
+                    onNotFound: TwoUsersLookupResult.SecondUserNotFound(),
+                    onFound: otherUser =>
+                        TwoUsersLookupResult.BothFound(user, otherUser)));
+
+            return combinedRes.Match<IHttpActionResult>(
+                onFirstInvalidId: BadRequest("Invalid user ID."),
+                onFirstNotFound: BadRequest("User not found."),
+                onSecondInvalidId: BadRequest("Invalid ID for other user."),
+                onSecondNotFound: BadRequest("Other user not found."),
+                onBothFound: (user, otherUser) =>
                 {
-                    return otherUserRes.Match<IHttpActionResult>(
-                        onInvalidId: BadRequest("Invalid ID for other user."),
-                        onNotFound: BadRequest("Other user not found."),
-                        onFound: otherUser =>
-                        {
-                            user.Connect(otherUser);
-                            UserRepository.Update(user);
-                            return Ok(otherUser);
-                        });
+                    user.Connect(otherUser);
+                    UserRepository.Update(user);
+
+                    return Ok(otherUser);
                 });
         }
 
