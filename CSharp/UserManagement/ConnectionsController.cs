@@ -22,8 +22,14 @@ namespace Ploeh.Samples.UserManagement
 
         public IHttpActionResult Post(string userId, string otherUserId)
         {
-            var userRes = LookupUser(userId);
-            var otherUserRes = LookupUser(otherUserId);
+            var userRes = LookupUser(userId).SelectError(
+                error => error.Accept(UserLookupError.Switch(
+                    onInvalidId: "Invalid user ID.",
+                    onNotFound:  "User not found.")));
+            var otherUserRes = LookupUser(otherUserId).SelectError(
+                error => error.Accept(UserLookupError.Switch(
+                    onInvalidId: "Invalid ID for other user.",
+                    onNotFound:  "Other user not found.")));
 
             var combinedRes =
                 userRes.Accept(new UserLookupResultVisitor(otherUserRes));
@@ -32,12 +38,12 @@ namespace Ploeh.Samples.UserManagement
         }
 
         private class UserLookupResultVisitor : 
-            IResultVisitor<User, IUserLookupError, IResult<Tuple<User, User>, string>>
+            IResultVisitor<User, string, IResult<Tuple<User, User>, string>>
         {
-            private readonly IResult<User, IUserLookupError> otherUserRes;
+            private readonly IResult<User, string> otherUserRes;
 
             public UserLookupResultVisitor(
-                IResult<User, IUserLookupError> otherUserRes)
+                IResult<User, string> otherUserRes)
             {
                 this.otherUserRes = otherUserRes;
             }
@@ -50,17 +56,14 @@ namespace Ploeh.Samples.UserManagement
             }
 
             public IResult<Tuple<User, User>, string> VisitError(
-                IUserLookupError error)
+                string error)
             {
-                return Result.Error<Tuple<User, User>, string>(
-                    error.Accept(UserLookupError.Switch(
-                        onInvalidId: "Invalid user ID.",
-                        onNotFound:  "User not found.")));
+                return Result.Error<Tuple<User, User>, string>(error);
             }
         }
 
         private class FirstUserFoundLookupResultVisitor :
-            IResultVisitor<User, IUserLookupError, IResult<Tuple<User, User>, string>>
+            IResultVisitor<User, string, IResult<Tuple<User, User>, string>>
         {
             private readonly User firstUser;
 
@@ -77,12 +80,9 @@ namespace Ploeh.Samples.UserManagement
             }
 
             public IResult<Tuple<User, User>, string> VisitError(
-                IUserLookupError error)
+                string error)
             {
-                return Result.Error<Tuple<User, User>, string>(
-                    error.Accept(UserLookupError.Switch(
-                        onInvalidId: "Invalid ID for other user.",
-                        onNotFound:  "Other user not found.")));
+                return Result.Error<Tuple<User, User>, string>(error);
             }
         }
 
