@@ -32,11 +32,12 @@ namespace Ploeh.Samples.UserManagement
         }
 
         private class UserLookupResultVisitor : 
-            IUserLookupResultVisitor<User, ITwoUsersLookupResult<Tuple<User, User>>>
+            IUserLookupResultVisitor<User, IUserLookupError, ITwoUsersLookupResult<Tuple<User, User>>>
         {
-            private readonly IUserLookupResult<User> otherUserRes;
+            private readonly IUserLookupResult<User, IUserLookupError> otherUserRes;
 
-            public UserLookupResultVisitor(IUserLookupResult<User> otherUserRes)
+            public UserLookupResultVisitor(
+                IUserLookupResult<User, IUserLookupError> otherUserRes)
             {
                 this.otherUserRes = otherUserRes;
             }
@@ -58,7 +59,7 @@ namespace Ploeh.Samples.UserManagement
         }
 
         private class FirstUserFoundLookupResultVisitor :
-            IUserLookupResultVisitor<User, ITwoUsersLookupResult<Tuple<User, User>>>
+            IUserLookupResultVisitor<User, IUserLookupError, ITwoUsersLookupResult<Tuple<User, User>>>
         {
             private readonly User firstUser;
 
@@ -109,21 +110,21 @@ namespace Ploeh.Samples.UserManagement
             }
         }
 
-        private IUserLookupResult<User> LookupUser(string id)
+        private IUserLookupResult<User, IUserLookupError> LookupUser(string id)
         {
             var user = UserCache.Find(id);
             if (user != null)
-                return UserLookupResult.Success(user);
+                return UserLookupResult.Success<User, IUserLookupError>(user);
 
             int userInt;
             if (!int.TryParse(id, out userInt))
-                return UserLookupResult.Error<User>(UserLookupError.InvalidId);
+                return UserLookupResult.Error<User, IUserLookupError>(UserLookupError.InvalidId);
 
             user = UserRepository.ReadUser(userInt);
             if (user == null)
-                return UserLookupResult.Error<User>(UserLookupError.NotFound);
+                return UserLookupResult.Error<User, IUserLookupError>(UserLookupError.NotFound);
 
-            return UserLookupResult.Success(user);
+            return UserLookupResult.Success<User, IUserLookupError>(user);
         }
     }
 }

@@ -1,16 +1,16 @@
 ﻿namespace Ploeh.Samples.UserManagement
 {
-    internal class ErrorUserLookupResult<S> : IUserLookupResult<S>
+    internal class ErrorUserLookupResult<S, E> : IUserLookupResult<S, E>
     {
-        private IUserLookupError error;
+        private readonly E error;
 
-        public ErrorUserLookupResult(IUserLookupError error)
+        public ErrorUserLookupResult(E error)
         {
             this.error = error;
         }
 
         public TResult Accept<TResult>(
-            IUserLookupResultVisitor<S, TResult> visitor)
+            IUserLookupResultVisitor<S, E, TResult> visitor)
         {
             return visitor.VisitError(error);
         }
