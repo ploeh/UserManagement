@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Ploeh.Samples.UserManagement
 {
-    internal class SuccessTwoUsersLookupResult<S> : ITwoUsersLookupResult<S>
+    internal class SuccessTwoUsersLookupResult<S, E> : ITwoUsersLookupResult<S, E>
     {
         private readonly S success;
 
@@ -16,7 +16,7 @@ namespace Ploeh.Samples.UserManagement
         }
 
         public TResult Accept<TResult>(
-            ITwoUsersLookupResultVisitor<S, TResult> visitor)
+            ITwoUsersLookupResultVisitor<S, E, TResult> visitor)
         {
             return visitor.VisitSuccess(success);
         }

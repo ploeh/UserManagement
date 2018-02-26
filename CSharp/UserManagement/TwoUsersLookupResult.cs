@@ -8,15 +8,14 @@ namespace Ploeh.Samples.UserManagement
 {
     public static class TwoUsersLookupResult
     {
-        public static ITwoUsersLookupResult<S> Success<S>(S success)
+        public static ITwoUsersLookupResult<S, E> Success<S, E>(S success)
         {
-            return new SuccessTwoUsersLookupResult<S>(success);
+            return new SuccessTwoUsersLookupResult<S, E>(success);
         }
 
-        public static ITwoUsersLookupResult<Tuple<User, User>> Error<S>(
-            string error)
+        public static ITwoUsersLookupResult<S, E> Error<S, E>(E error)
         {
-            return new ErrorTwoUsersLookupResult<Tuple<User, User>>(error);
+            return new ErrorTwoUsersLookupResult<S, E>(error);
         }
     }
 }
