@@ -32,7 +32,7 @@ namespace Ploeh.Samples.UserManagement
                     onNotFound:  "Other user not found.")));
 
             var connect =
-                userRes.Select(
+                userRes.SelectMany(
                     user => otherUserRes.Select(otherUser =>
                     {
                         user.Connect(otherUser);
@@ -42,7 +42,6 @@ namespace Ploeh.Samples.UserManagement
                     }));
 
             return connect
-                .Join()
                 .SelectError(error => BadRequest(error))
                 .Select(u => Ok(u))
                 .Bifold();
