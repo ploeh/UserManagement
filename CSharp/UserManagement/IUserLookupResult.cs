@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Ploeh.Samples.UserManagement
 {
-    public interface IUserLookupResult
+    public interface IUserLookupResult<S>
     {
-        TResult Accept<TResult>(IUserLookupResultVisitor<TResult> visitor);
+        TResult Accept<TResult>(IUserLookupResultVisitor<S, TResult> visitor);
     }
 }

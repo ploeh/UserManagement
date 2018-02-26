@@ -6,12 +6,19 @@ using System.Threading.Tasks;
 
 namespace Ploeh.Samples.UserManagement
 {
-    internal class SecondNotFoundTwoUsersLookupResult<S> : ITwoUsersLookupResult<S>
+    internal class SuccessTwoUsersLookupResult<S> : ITwoUsersLookupResult<S>
     {
+        private readonly S success;
+
+        public SuccessTwoUsersLookupResult(S success)
+        {
+            this.success = success;
+        }
+
         public TResult Accept<TResult>(
             ITwoUsersLookupResultVisitor<S, TResult> visitor)
         {
-            return visitor.VisitSecondNotFound;
+            return visitor.VisitSuccess(success);
         }
     }
 }

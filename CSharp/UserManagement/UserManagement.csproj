@@ -47,8 +47,8 @@
     <Compile Include="FirstNotFoundTwoUsersLookupResult.cs" />
     <Compile Include="SecondInvalidIdTwoUsersLookupResult.cs" />
     <Compile Include="FirstInvalidIdTwoUsersLookupResult.cs" />
-    <Compile Include="FoundTwoUsersLookupResult.cs" />
-    <Compile Include="FoundUserLookupResult.cs" />
+    <Compile Include="SuccessTwoUsersLookupResult.cs" />
+    <Compile Include="SuccessUserLookupResult.cs" />
     <Compile Include="IHttpActionResult.cs" />
     <Compile Include="InvalidIdUserLookupResult.cs" />
     <Compile Include="ITwoUsersLookupResult.cs" />

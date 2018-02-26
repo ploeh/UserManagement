@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Ploeh.Samples.UserManagement
 {
-    internal class FirstInvalidIdTwoUsersLookupResult : ITwoUsersLookupResult
+    internal class FirstInvalidIdTwoUsersLookupResult<S> : ITwoUsersLookupResult<S>
     {
         public TResult Accept<TResult>(
-            ITwoUsersLookupResultVisitor<TResult> visitor)
+            ITwoUsersLookupResultVisitor<S, TResult> visitor)
         {
             return visitor.VisitFirstInvalidId;
         }

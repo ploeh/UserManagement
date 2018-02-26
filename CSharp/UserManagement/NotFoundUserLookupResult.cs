@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace Ploeh.Samples.UserManagement
 {
-    internal class NotFoundUserLookupResult : IUserLookupResult
+    internal class NotFoundUserLookupResult<S> : IUserLookupResult<S>
     {
-        public TResult Accept<TResult>(IUserLookupResultVisitor<TResult> visitor)
+        public TResult Accept<TResult>(
+            IUserLookupResultVisitor<S, TResult> visitor)
         {
             return visitor.VisitNotFound;
         }

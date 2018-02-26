@@ -8,19 +8,19 @@ namespace Ploeh.Samples.UserManagement
 {
     public static class UserLookupResult
     {
-        public static IUserLookupResult UserFound(User user)
+        public static IUserLookupResult<S> Success<S>(S success)
         {
-            return new FoundUserLookupResult(user);
+            return new SuccessUserLookupResult<S>(success);
         }
 
-        public static IUserLookupResult InvalidUserId()
+        public static IUserLookupResult<User> InvalidUserId()
         {
-            return new InvalidIdUserLookupResult();
+            return new InvalidIdUserLookupResult<User>();
         }
 
-        public static IUserLookupResult UserNotFound()
+        public static IUserLookupResult<User> UserNotFound()
         {
-            return new NotFoundUserLookupResult();
+            return new NotFoundUserLookupResult<User>();
         }
     }
 }

@@ -8,29 +8,29 @@ namespace Ploeh.Samples.UserManagement
 {
     public static class TwoUsersLookupResult
     {
-        public static ITwoUsersLookupResult BothFound(User user1, User user2)
+        public static ITwoUsersLookupResult<S> Success<S>(S success)
         {
-            return new FoundTwoUsersLookupResult(user1, user2);
+            return new SuccessTwoUsersLookupResult<S>(success);
         }
 
-        public static ITwoUsersLookupResult FirstUserIdInvalid()
+        public static ITwoUsersLookupResult<Tuple<User, User>> FirstUserIdInvalid()
         {
-            return new FirstInvalidIdTwoUsersLookupResult();
+            return new FirstInvalidIdTwoUsersLookupResult<Tuple<User, User>>();
         }
 
-        public static ITwoUsersLookupResult FirstUserNotFound()
+        public static ITwoUsersLookupResult<Tuple<User, User>> FirstUserNotFound()
         {
-            return new FirstNotFoundTwoUsersLookupResult();
+            return new FirstNotFoundTwoUsersLookupResult<Tuple<User, User>>();
         }
 
-        public static ITwoUsersLookupResult SecondUserIdInvalid()
+        public static ITwoUsersLookupResult<Tuple<User, User>> SecondUserIdInvalid()
         {
-            return new SecondInvalidIdTwoUsersLookupResult();
+            return new SecondInvalidIdTwoUsersLookupResult<Tuple<User, User>>();
         }
 
-        public static ITwoUsersLookupResult SecondUserNotFound()
+        public static ITwoUsersLookupResult<Tuple<User, User>> SecondUserNotFound()
         {
-            return new SecondNotFoundTwoUsersLookupResult();
+            return new SecondNotFoundTwoUsersLookupResult<Tuple<User, User>>();
         }
     }
 }
