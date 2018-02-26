@@ -71,5 +71,23 @@ namespace Ploeh.Samples.UserManagement
                 return Error<S2, E>(error);
             }
         }
+
+        public static T Bifold<T>(this IResult<T, T> source)
+        {
+            return source.Accept(new BifoldResultVisitor<T>());
+        }
+
+        private class BifoldResultVisitor<T> : IResultVisitor<T, T, T>
+        {
+            public T VisitError(T error)
+            {
+                return error;
+            }
+
+            public T VisitSuccess(T success)
+            {
+                return success;
+            }
+        }
     }
 }

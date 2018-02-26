@@ -45,22 +45,8 @@ namespace Ploeh.Samples.UserManagement
                 .SelectError(error => BadRequest(error))
                 .Select(r => r.SelectError(error => BadRequest(error)))
                 .Select(r => r.Select(u => Ok(u)))
-                .Select(r => r.Accept(new ResultToHttpResultVisitor()))
-                .Accept(new ResultToHttpResultVisitor());
-        }
-
-        private class ResultToHttpResultVisitor :
-            IResultVisitor<IHttpActionResult, IHttpActionResult, IHttpActionResult>
-        {
-            public IHttpActionResult VisitError(IHttpActionResult error)
-            {
-                return error;
-            }
-
-            public IHttpActionResult VisitSuccess(IHttpActionResult success)
-            {
-                return success;
-            }
+                .Select(r => r.Bifold())
+                .Bifold();
         }
 
         private IResult<User, IUserLookupError> LookupUser(string id)
