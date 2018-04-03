@@ -22,12 +22,15 @@ namespace Ploeh.Samples.UserManagement
 
         public IHttpActionResult Post(string userId, string otherUserId)
         {
-            return LookupUser(userId).Match(
+            var userRes = LookupUser(userId);
+            var otherUserRes = LookupUser(otherUserId);
+
+            return userRes.Match(
                 onInvalidId: BadRequest("Invalid user ID."),
                 onNotFound: BadRequest("User not found."),
                 onFound: user =>
                 {
-                    return LookupUser(otherUserId).Match<IHttpActionResult>(
+                    return otherUserRes.Match<IHttpActionResult>(
                         onInvalidId: BadRequest("Invalid ID for other user."),
                         onNotFound: BadRequest("Other user not found."),
                         onFound: otherUser =>
