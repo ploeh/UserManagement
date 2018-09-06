@@ -47,10 +47,10 @@
     <Compile Include="InvalidIdUserLookupError.cs" />
     <Compile Include="IUserLookupError.cs" />
     <Compile Include="IUserLookupErrorVisitor.cs" />
+    <Compile Include="IUserReader.cs" />
     <Compile Include="NotFoundUserLookupError.cs" />
     <Compile Include="SuccessResult.cs" />
     <Compile Include="IHttpActionResult.cs" />
-    <Compile Include="IUserCache.cs" />
     <Compile Include="IResult.cs" />
     <Compile Include="IUserRepository.cs" />
     <Compile Include="OkNegotiatedContentResult.cs" />

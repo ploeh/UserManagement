@@ -8,7 +8,6 @@ namespace Ploeh.Samples.UserManagement
 {
     public interface IUserRepository
     {
-        User ReadUser(int userId);
         void Update(User user);
     }
 }

@@ -13,16 +13,18 @@ namespace Ploeh.Samples.UserManagement.UnitTests
     {
         [Theory, UserManagementTestConventions]
         public void UsersSuccessfullyConnect(
-            [Frozen]Mock<IUserCache> cacheTD,
+            [Frozen]Mock<IUserReader> readerTD,
             [Frozen]Mock<IUserRepository> repoTD,
             User user,
             User otherUser,
             ConnectionsController sut)
         {
-            cacheTD.Setup(c => c.Find(     user.Id.ToString())).Returns((User)null);
-            cacheTD.Setup(c => c.Find(otherUser.Id.ToString())).Returns((User)null);
-            repoTD.Setup(r => r.ReadUser(user.Id)).Returns(user);
-            repoTD.Setup(r => r.ReadUser(otherUser.Id)).Returns(otherUser);
+            readerTD
+                .Setup(r => r.Lookup(user.Id.ToString()))
+                .Returns(Result.Success<User, IUserLookupError>(user));
+            readerTD
+                .Setup(r => r.Lookup(otherUser.Id.ToString()))
+                .Returns(Result.Success<User, IUserLookupError>(otherUser));
 
             var actual = sut.Post(user.Id.ToString(), otherUser.Id.ToString());
 
@@ -34,58 +36,21 @@ namespace Ploeh.Samples.UserManagement.UnitTests
         }
 
         [Theory, UserManagementTestConventions]
-        public void UsersSuccessfullyConnectWhenUserIsInCache(
-            [Frozen]Mock<IUserCache> cacheTD,
-            [Frozen]Mock<IUserRepository> repoTD,
-            User user,
-            User otherUser,
-            ConnectionsController sut)
-        {
-            cacheTD.Setup(c => c.Find(user.Id.ToString())).Returns(user);
-            cacheTD.Setup(c => c.Find(otherUser.Id.ToString())).Returns((User)null);
-            repoTD.Setup(r => r.ReadUser(otherUser.Id)).Returns(otherUser);
-
-            var actual = sut.Post(user.Id.ToString(), otherUser.Id.ToString());
-
-            var ok = Assert.IsAssignableFrom<OkNegotiatedContentResult<User>>(
-                actual);
-            Assert.Equal(otherUser, ok.Content);
-            repoTD.Verify(r => r.Update(user));
-            Assert.Contains(otherUser.Id, user.Connections);
-        }
-
-        [Theory, UserManagementTestConventions]
-        public void UsersSuccessfullyConnectWhenOtherUserIsInCache(
-            [Frozen]Mock<IUserCache> cacheTD,
-            [Frozen]Mock<IUserRepository> repoTD,
-            User user,
-            User otherUser,
-            ConnectionsController sut)
-        {
-            cacheTD.Setup(c => c.Find(user.Id.ToString())).Returns((User)null);
-            cacheTD.Setup(c => c.Find(otherUser.Id.ToString())).Returns(otherUser);
-            repoTD.Setup(r => r.ReadUser(user.Id)).Returns(user);
-
-            var actual = sut.Post(user.Id.ToString(), otherUser.Id.ToString());
-
-            var ok = Assert.IsAssignableFrom<OkNegotiatedContentResult<User>>(
-                actual);
-            Assert.Equal(otherUser, ok.Content);
-            repoTD.Verify(r => r.Update(user));
-            Assert.Contains(otherUser.Id, user.Connections);
-        }
-
-        [Theory, UserManagementTestConventions]
-        public void UsersFailToConnectWhenUserIdIsNoInt(
-            [Frozen]Mock<IUserCache> cacheTD,
+        public void UsersFailToConnectWhenUserIdIsInvalid(
+            [Frozen]Mock<IUserReader> readerTD,
             [Frozen]Mock<IUserRepository> repoTD,
             string userId,
             User otherUser,
             ConnectionsController sut)
         {
             Assert.False(int.TryParse(userId, out var _));
-            cacheTD.Setup(c => c.Find(userId)).Returns((User)null);
-            cacheTD.Setup(c => c.Find(otherUser.Id.ToString())).Returns(otherUser);
+            readerTD
+                .Setup(r => r.Lookup(userId))
+                .Returns(Result.Error<User, IUserLookupError>(
+                    UserLookupError.InvalidId));
+            readerTD
+                .Setup(r => r.Lookup(otherUser.Id.ToString()))
+                .Returns(Result.Success<User, IUserLookupError>(otherUser));
 
             var actual = sut.Post(userId, otherUser.Id.ToString());
 
@@ -95,16 +60,21 @@ namespace Ploeh.Samples.UserManagement.UnitTests
         }
 
         [Theory, UserManagementTestConventions]
-        public void UsersFailToConnectWhenOtherUserIdIsNoInt(
-            [Frozen]Mock<IUserCache> cacheTD,
+        public void UsersFailToConnectWhenOtherUserIdIsInvalid(
+            [Frozen]Mock<IUserReader> readerTD,
             [Frozen]Mock<IUserRepository> repoTD,
             User user,
             string otherUserId,
             ConnectionsController sut)
         {
             Assert.False(int.TryParse(otherUserId, out var _));
-            cacheTD.Setup(c => c.Find(user.Id.ToString())).Returns(user);
-            cacheTD.Setup(c => c.Find(otherUserId)).Returns((User)null);
+            readerTD
+                .Setup(r => r.Lookup(user.Id.ToString()))
+                .Returns(Result.Success<User, IUserLookupError>(user));
+            readerTD
+                .Setup(r => r.Lookup(otherUserId))
+                .Returns(Result.Error<User, IUserLookupError>(
+                    UserLookupError.InvalidId));
 
             var actual = sut.Post(user.Id.ToString(), otherUserId);
 
@@ -114,19 +84,22 @@ namespace Ploeh.Samples.UserManagement.UnitTests
         }
 
         [Theory, UserManagementTestConventions]
-        public void UsersFailToConnectWhenUserIsInNeitherCacheNorRepo(
-            [Frozen]Mock<IUserCache> cacheTD,
+        public void UsersDoNotConnectWhenUserDoesNotExist(
+            [Frozen]Mock<IUserReader> readerTD,
             [Frozen]Mock<IUserRepository> repoTD,
-            int userId,
+            string userId,
             User otherUser,
             ConnectionsController sut)
         {
-            cacheTD.Setup(c => c.Find(userId.ToString())).Returns((User)null);
-            cacheTD.Setup(c => c.Find(otherUser.Id.ToString())).Returns(otherUser);
-            repoTD.Setup(r => r.ReadUser(userId)).Returns((User)null);
-            repoTD.Setup(r => r.ReadUser(otherUser.Id)).Returns(otherUser);
+            readerTD
+                .Setup(r => r.Lookup(userId))
+                .Returns(Result.Error<User, IUserLookupError>(
+                    UserLookupError.NotFound));
+            readerTD
+                .Setup(r => r.Lookup(otherUser.Id.ToString()))
+                .Returns(Result.Success<User, IUserLookupError>(otherUser));
 
-            var actual = sut.Post(userId.ToString(), otherUser.Id.ToString());
+            var actual = sut.Post(userId, otherUser.Id.ToString());
 
             var err = Assert.IsAssignableFrom<BadRequestErrorMessageResult>(actual);
             Assert.Equal("User not found.", err.Message);
@@ -134,17 +107,20 @@ namespace Ploeh.Samples.UserManagement.UnitTests
         }
 
         [Theory, UserManagementTestConventions]
-        public void UsersFailToConnectWhenOtherUserIsInNeitherCacheNorRepo(
-            [Frozen]Mock<IUserCache> cacheTD,
+        public void UsersDoNotConnectWhenOtherUserDoesNotExist(
+            [Frozen]Mock<IUserReader> readerTD,
             [Frozen]Mock<IUserRepository> repoTD,
             User user,
             int otherUserId,
             ConnectionsController sut)
         {
-            cacheTD.Setup(c => c.Find(user.Id.ToString())).Returns(user);
-            cacheTD.Setup(c => c.Find(otherUserId.ToString())).Returns((User)null);
-            repoTD.Setup(r => r.ReadUser(user.Id)).Returns(user);
-            repoTD.Setup(r => r.ReadUser(otherUserId)).Returns((User)null);
+            readerTD
+                .Setup(r => r.Lookup(user.Id.ToString()))
+                .Returns(Result.Success<User, IUserLookupError>(user));
+            readerTD
+                .Setup(r => r.Lookup(otherUserId.ToString()))
+                .Returns(Result.Error<User, IUserLookupError>(
+                    UserLookupError.NotFound));
 
             var actual = sut.Post(user.Id.ToString(), otherUserId.ToString());
 
