@@ -1,5 +1,4 @@
 ﻿using AutoFixture.Xunit2;
-using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
