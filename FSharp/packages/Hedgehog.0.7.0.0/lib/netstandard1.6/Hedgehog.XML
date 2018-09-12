@@ -1,0 +1,1134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doc>
+<assembly><name>Hedgehog</name></assembly>
+<members>
+<member name="P:FSharpx.Collections.LazyList`1.Uncons">
+<summary>
+O(1). Returns tuple of head element and tail of the list.
+</summary>
+</member>
+<member name="P:FSharpx.Collections.LazyList`1.TryUncons">
+<summary>
+O(1). Returns option tuple of head element and tail of the list.
+</summary>
+</member>
+<member name="P:FSharpx.Collections.LazyList`1.TryTail">
+<summary>
+O(1). Return option the list corresponding to the remaining items in the sequence.  
+ Forces the evaluation of the first cell of the list if it is not already evaluated.
+</summary>
+</member>
+<member name="P:FSharpx.Collections.LazyList`1.TryHead">
+<summary>
+O(1). Return option the first element of the list.  Forces the evaluation of
+ the first cell of the list if it is not already evaluated.
+</summary>
+</member>
+<member name="P:FSharpx.Collections.LazyList`1.Tail">
+<summary>
+O(1). Return the list corresponding to the remaining items in the sequence.  
+ Forces the evaluation of the first cell of the list if it is not already evaluated.
+</summary>
+</member>
+<member name="P:FSharpx.Collections.LazyList`1.IsEmpty">
+<summary>
+O(1). Test if a list is empty.  Forces the evaluation of
+ the first element of the stream if it is not already evaluated.
+</summary>
+</member>
+<member name="P:FSharpx.Collections.LazyList`1.Head">
+<summary>
+O(1). Return the first element of the list.  Forces the evaluation of
+ the first cell of the list if it is not already evaluated.
+</summary>
+</member>
+<member name="M:FSharpx.Collections.LazyList`1.Length">
+<summary>
+O(n). Return the length of the list
+</summary>
+</member>
+<member name="T:FSharpx.Collections.LazyList`1">
+<summary>
+ LazyLists are possibly-infinite, cached sequences.  See also IEnumerable/Seq for
+ uncached sequences. LazyLists normally involve delayed computations without 
+ side-effects.  The results of these computations are cached and evaluations will be 
+ performed only once for each element of the lazy list.  In contrast, for sequences 
+ (IEnumerable) recomputation happens each time an enumerator is created and the sequence 
+ traversed.
+
+ LazyLists can represent cached, potentially-infinite computations.  Because they are 
+ cached they may cause memory leaks if some active code or data structure maintains a 
+ live reference to the head of an infinite or very large lazy list while iterating it, 
+ or if a reference is maintained after the list is no longer required.
+
+ Lazy lists may be matched using the LazyList.Cons and LazyList.Nil active patterns. 
+ These may force the computation of elements of the list.
+</summary>
+</member>
+<member name="M:FSharpx.Collections.NameValueCollectionModule.ofSeq(System.Collections.Generic.IEnumerable{System.Tuple{System.String,System.String}})">
+ <summary>
+ Creates a <see cref="NameValueCollection"/> from a list of key-value pairs
+ </summary>
+ <param name="l"></param>
+</member>
+<member name="M:FSharpx.Collections.NameValueCollectionModule.toList(System.Collections.Specialized.NameValueCollection)">
+ <summary>
+ Returns a <see cref="NameValueCollection"/> as a list of key-value pairs.
+ Note that keys may be duplicated.
+ </summary>
+ <param name="a"></param>
+</member>
+<member name="M:FSharpx.Collections.NameValueCollectionModule.ToEnumerable(System.Collections.Specialized.NameValueCollection)">
+ <summary>
+ Returns a <see cref="NameValueCollection"/> as a sequence of key-value pairs.
+ Note that keys may be duplicated.
+ </summary>
+ <param name="a"></param>
+</member>
+<member name="M:FSharpx.Collections.NameValueCollectionModule.ToArray(System.Collections.Specialized.NameValueCollection)">
+ <summary>
+ Returns a <see cref="NameValueCollection"/> as an array of key-value pairs.
+ Note that keys may be duplicated.
+ </summary>
+ <param name="a"></param>
+</member>
+<member name="M:FSharpx.Collections.NameValueCollectionModule.add(System.String,System.String,System.Collections.Specialized.NameValueCollection)">
+<summary>
+ Adds an element to a copy of an existing NameValueCollection
+</summary>
+</member>
+<member name="M:FSharpx.Collections.NameValueCollectionModule.addInPlace(System.Collections.Specialized.NameValueCollection,System.String,System.String)">
+ <summary>
+ In-place add of a key-value pair to a <see cref="NameValueCollection"/>
+ </summary>
+ <param name="x"></param>
+ <param name="a"></param>
+ <param name="b"></param>
+</member>
+<member name="M:FSharpx.Collections.NameValueCollectionModule.Concat(System.Collections.Specialized.NameValueCollection,System.Collections.Specialized.NameValueCollection)">
+ <summary>
+ Returns a new <see cref="NameValueCollection"/> with the concatenation of two <see cref="NameValueCollection"/>s
+ </summary>
+ <param name="a"></param>
+ <param name="b"></param>
+</member>
+<member name="T:FSharpx.Collections.NameValueCollectionModule">
+<summary>
+ Extensions for NameValueCollections.
+</summary>
+</member>
+<member name="M:FSharpx.Collections.Map.keys``2(Microsoft.FSharp.Collections.FSharpMap{``0,``1})">
+<summary>
+ Retrieves the keys from a Map    
+</summary>
+</member>
+<member name="M:FSharpx.Collections.Map.values``2(Microsoft.FSharp.Collections.FSharpMap{``0,``1})">
+<summary>
+ Retrieves the values from a Map
+</summary>
+</member>
+<member name="M:FSharpx.Collections.Map.removeMany``2(System.Collections.Generic.IEnumerable{``0},Microsoft.FSharp.Collections.FSharpMap{``0,``1})">
+<summary>
+ Allows to remove many keys from a Map
+</summary>
+</member>
+<member name="M:FSharpx.Collections.Map.union``2(Microsoft.FSharp.Collections.FSharpMap{``0,``1},Microsoft.FSharp.Collections.FSharpMap{``0,``1})">
+<summary>
+ Combines the two Maps into a single Map
+</summary>
+</member>
+<member name="M:FSharpx.Collections.Map.updateWith``2(Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.FSharpOption{``0}},``1,Microsoft.FSharp.Collections.FSharpMap{``1,``0})">
+ <summary>
+ <code>update f k map</code> updates the value <code>x</code> at key <code>k</code> (if it is in the map). 
+ If <code>f x</code> is <code>None</code>, the element is deleted. 
+ If it is <code>Some y</code>, the key is bound to the new value <code>y</code>.
+ </summary>
+</member>
+<member name="M:FSharpx.Collections.Map.insertWith``2(Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.FSharpFunc{``0,``0}},``1,``0,Microsoft.FSharp.Collections.FSharpMap{``1,``0})">
+ <summary>
+ <code>insertWith f key value mp</code> will insert the pair <code>(key, value)</code> into <code>mp</code> if <code>key</code> does not exist in the map. 
+ If the key does exist, the function will insert <code>f new_value old_value</code>.
+ </summary>
+</member>
+<member name="T:FSharpx.Collections.Map">
+<summary>
+ Extensions for F#&apos;s Map module.
+</summary>
+</member>
+<member name="T:FSharpx.Collections.DictionaryModule">
+<summary>
+ Extensions for System.Collections.Generic.Dictionary.
+</summary>
+</member>
+<member name="M:FSharpx.Collections.List.merge``1(Microsoft.FSharp.Collections.FSharpList{``0},Microsoft.FSharp.Collections.FSharpList{``0})">
+<summary>
+ Merges two sequences by the default comparer for &apos;T
+</summary>
+</member>
+<member name="M:FSharpx.Collections.List.mergeBy``2(Microsoft.FSharp.Core.FSharpFunc{``0,``1},Microsoft.FSharp.Collections.FSharpList{``0},Microsoft.FSharp.Collections.FSharpList{``0})">
+<summary>
+ Merges to sequences using the given function to transform the elements for comparision
+</summary>
+</member>
+<member name="M:FSharpx.Collections.List.mapAccum``3(Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.FSharpFunc{``1,System.Tuple{``0,``2}}},``0,Microsoft.FSharp.Collections.FSharpList{``1})">
+<summary>
+ Behaves like a combination of map and fold; 
+ it applies a function to each element of a list, 
+ passing an accumulating parameter from left to right, 
+ and returning a final value of this accumulator together with the new list.
+</summary>
+</member>
+<member name="M:FSharpx.Collections.List.groupNeighboursBy``2(Microsoft.FSharp.Core.FSharpFunc{``0,``1},Microsoft.FSharp.Collections.FSharpList{``0})">
+<summary>
+ Applies a key-generating function to each element of a list and yields a list of unique keys and a list of all elements that have each key.
+ This function groups together only neighbouring elements in the list.
+</summary>
+</member>
+<member name="M:FSharpx.Collections.List.cons``1(``0,Microsoft.FSharp.Collections.FSharpList{``0})">
+<summary>
+ Curried cons
+</summary>
+</member>
+<member name="T:FSharpx.Collections.List">
+<summary>
+ Extensions for F#&apos;s List module.
+</summary>
+</member>
+<member name="M:FSharpx.Collections.ArrayModule.centralMovingAverageOfOption``1(System.Int32,Microsoft.FSharp.Core.FSharpOption{``0}[])">
+<summary>
+ Calculates the central moving average for the array of optional elements using n
+ elements either side of the point where the mean is being calculated. If any of
+ the optional elements in the averaging window are None then the average itself
+ is None.
+</summary>
+</member>
+<member name="M:FSharpx.Collections.ArrayModule.centralMovingAverage``1(System.Int32,``0[])">
+<summary>
+ Calculates the central moving average for the array using n elements either side
+ of the point where the mean is being calculated.
+</summary>
+</member>
+<member name="M:FSharpx.Collections.ArrayModule.centeredWindow``1(System.Int32,``0[])">
+<summary>
+ Returns an array of sliding windows of data drawn from the source array.
+ Each window contains the n elements surrounding the current element.
+</summary>
+</member>
+<member name="T:FSharpx.Collections.ArrayModule">
+<summary>
+ Extensions for F#&apos;s Array module.
+</summary>
+</member>
+<member name="M:FSharpx.Collections.Seq.page``1(System.Int32,System.Int32,System.Collections.Generic.IEnumerable{``0})">
+<summary>
+ Pages the underlying sequence
+</summary>
+</member>
+<member name="M:FSharpx.Collections.Seq.grow``1(System.Int32)">
+<summary>
+ Replicates each element in the seq n-times
+</summary>
+</member>
+<member name="M:FSharpx.Collections.Seq.combine``3(Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.FSharpFunc{``1,``2}},System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``1})">
+<summary>
+ Creates a new collection whose elements are the results of applying the given function to the corresponding pairs of elements from the two sequences. 
+ Unlike Seq.map2, if one input sequence is shorter than the other then the remaining elements of the longer sequence are not ignored, they are yielded at the end of the resulting sequence.
+</summary>
+</member>
+<member name="M:FSharpx.Collections.Seq.contract``1(System.Int32,System.Collections.Generic.IEnumerable{``0})">
+<summary>
+ Contracts a seq selecting every n values
+</summary>
+</member>
+<member name="M:FSharpx.Collections.Seq.repeat``1(``0)">
+<summary>
+ Creates an infinite sequence of the given value
+</summary>
+</member>
+<member name="M:FSharpx.Collections.Seq.skipNoFail``1(System.Int32,System.Collections.Generic.IEnumerable{``0})">
+<summary>
+ The same as Seq.skip except it returns empty if the sequence is empty or does not have enough elements.
+ Alias for Enumerable.Skip
+</summary>
+</member>
+<member name="M:FSharpx.Collections.Seq.tryNth``1(System.Int32,System.Collections.Generic.IEnumerable{``0})">
+<summary>
+ The same as Seq.nth except returns None if the sequence is empty or does not have enough elements
+</summary>
+</member>
+<member name="M:FSharpx.Collections.Seq.tryHead``1(System.Collections.Generic.IEnumerable{``0})">
+<summary>
+ A safe version of seq head
+</summary>
+</member>
+<member name="M:FSharpx.Collections.Seq.asCircularWithBreak``1(System.Collections.Generic.IEnumerable{``0})">
+<summary>
+ Creates a infinite sequences of the given values returning None everytime the given seq is exhausted
+</summary>
+</member>
+<member name="M:FSharpx.Collections.Seq.asCircularOnLoop``1(Microsoft.FSharp.Core.FSharpFunc{Microsoft.FSharp.Core.Unit,Microsoft.FSharp.Core.Unit},System.Collections.Generic.IEnumerable{``0})">
+<summary>
+ Creates a infinite sequences of the given values, executing the given function everytime the given seq is exhausted
+</summary>
+</member>
+<member name="M:FSharpx.Collections.Seq.asCircular``1(System.Collections.Generic.IEnumerable{``0})">
+<summary>
+ Creates a infinite sequences of the given values
+</summary>
+</member>
+<member name="M:FSharpx.Collections.Seq.ofStreamByChunk(System.Int32,System.IO.Stream)">
+<summary>
+ Converts a stream into a seq of byte[] where the array is of the length given
+ Note: the last chunk maybe less than the given chunk size
+</summary>
+</member>
+<member name="M:FSharpx.Collections.Seq.ofStreamByByte(System.IO.Stream)">
+<summary>
+ Converts a Stream into a sequence of bytes
+</summary>
+</member>
+<member name="M:FSharpx.Collections.Seq.ofStreamReader(System.IO.StreamReader)">
+<summary>
+ Converts a streamReader into a seq yielding on each line
+</summary>
+</member>
+<member name="M:FSharpx.Collections.Seq.groupNeighboursBy``2(Microsoft.FSharp.Core.FSharpFunc{``0,``1},System.Collections.Generic.IEnumerable{``0})">
+<summary>
+ Applies a key-generating function to each element of a sequence and yields a sequence of unique keys and a sequence of all elements that have each key.
+ This function groups together only neighbouring elements in the seq.
+</summary>
+</member>
+<member name="M:FSharpx.Collections.Seq.span``1(Microsoft.FSharp.Core.FSharpFunc{``0,System.Boolean},System.Collections.Generic.IEnumerable{``0})">
+<summary>
+ Splits a sequences up to the point where the predicate holds
+</summary>
+</member>
+<member name="M:FSharpx.Collections.Seq.splitAt``1(System.Int32,System.Collections.Generic.IEnumerable{``0})">
+<summary>
+ Splits a sequences at the given index
+</summary>
+</member>
+<member name="M:FSharpx.Collections.Seq.tryAverage``1(System.Collections.Generic.IEnumerable{``0})">
+<summary>
+ The same as Seq.average except will return None if the seq is empty
+</summary>
+</member>
+<member name="M:FSharpx.Collections.Seq.iterBreak``1(Microsoft.FSharp.Core.FSharpFunc{``0,System.Boolean},System.Collections.Generic.IEnumerable{``0})">
+<summary>
+ Will iterate the current sequence until the given predicate is statisfied
+</summary>
+</member>
+<member name="M:FSharpx.Collections.Seq.tryFindWithIndex``1(Microsoft.FSharp.Core.FSharpFunc{``0,System.Boolean},System.Collections.Generic.IEnumerable{``0})">
+ <summary>
+ Returns the first element (with its index) for which the given function returns true.
+ Return None if no such element exists.
+ </summary>
+ <param name="pred">Predicate</param>
+ <param name="l">Sequence</param>
+</member>
+<member name="M:FSharpx.Collections.Seq.index``1(System.Collections.Generic.IEnumerable{``0})">
+ <summary>
+ Adds an index to a sequence
+ </summary>
+ <param name="a"></param>
+</member>
+<member name="M:FSharpx.Collections.Seq.unCons``1(System.Collections.Generic.IEnumerable{``0})">
+<summary>
+ Returns the head and tail of the seq. If the seq is empty, returns `None`.
+</summary>
+</member>
+<member name="M:FSharpx.Collections.Seq.cons``1(``0,System.Collections.Generic.IEnumerable{``0})">
+<summary>
+ Prepends `x` to the seq `xs`
+</summary>
+</member>
+<member name="T:FSharpx.Collections.Seq">
+<summary>
+ Extensions for F#&apos;s Seq module.
+</summary>
+</member>
+<member name="M:FSharpx.Collections.LazyListModule.rev``1(FSharpx.Collections.LazyList{``0})">
+<summary>
+ Returns the reverse list.
+</summary>
+</member>
+<member name="M:FSharpx.Collections.LazyListModule.ofSeq``1(System.Collections.Generic.IEnumerable{``0})">
+<summary>
+O(1). Build a new collection from the given enumerable object
+</summary>
+</member>
+<member name="M:FSharpx.Collections.LazyListModule.toSeq``1(FSharpx.Collections.LazyList{``0})">
+<summary>
+O(n). Return a view of the collection as an enumerable object
+</summary>
+</member>
+<member name="M:FSharpx.Collections.LazyListModule.toList``1(FSharpx.Collections.LazyList{``0})">
+<summary>
+O(n). Build a non-lazy list from the given collection. This function will eagerly evaluate all of the 
+ list (and thus may not terminate). 
+</summary>
+</member>
+<member name="M:FSharpx.Collections.LazyListModule.ofList``1(Microsoft.FSharp.Collections.FSharpList{``0})">
+<summary>
+O(1). Build a collection from the given list. This function will eagerly evaluate all of the 
+ list (and thus may not terminate). 
+</summary>
+</member>
+<member name="M:FSharpx.Collections.LazyListModule.toArray``1(FSharpx.Collections.LazyList{``0})">
+<summary>
+O(n). Build an array from the given collection
+</summary>
+</member>
+<member name="M:FSharpx.Collections.LazyListModule.ofArray``1(``0[])">
+<summary>
+O(1). Build a collection from the given array. This function will eagerly evaluate all of the 
+ list (and thus may not terminate). 
+</summary>
+</member>
+<member name="M:FSharpx.Collections.LazyListModule.map2``3(Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.FSharpFunc{``1,``2}},FSharpx.Collections.LazyList{``0},FSharpx.Collections.LazyList{``1})">
+<summary>
+O(1). Build a new collection whose elements are the results of applying the given function
+ to the corresponding elements of the two collections pairwise.
+</summary>
+</member>
+<member name="M:FSharpx.Collections.LazyListModule.map``2(Microsoft.FSharp.Core.FSharpFunc{``0,``1},FSharpx.Collections.LazyList{``0})">
+<summary>
+O(1). Build a new collection whose elements are the results of applying the given function
+ to each of the elements of the collection.
+</summary>
+</member>
+<member name="M:FSharpx.Collections.LazyListModule.scan``2(Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.FSharpFunc{``1,``0}},``0,FSharpx.Collections.LazyList{``1})">
+<summary>
+O(1). Return a new list consisting of the results of applying the given accumulating function
+ to successive elements of the list
+</summary>
+</member>
+<member name="M:FSharpx.Collections.LazyListModule.iter``1(Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.Unit},FSharpx.Collections.LazyList{``0})">
+<summary>
+O(n). Apply the given function to each element of the collection. 
+</summary>
+</member>
+<member name="M:FSharpx.Collections.LazyListModule.filter``1(Microsoft.FSharp.Core.FSharpFunc{``0,System.Boolean},FSharpx.Collections.LazyList{``0})">
+<summary>
+O(1). Return a new collection which on consumption will consist of only the elements of the collection
+ for which the given predicate returns &quot;true&quot;
+</summary>
+</member>
+<member name="M:FSharpx.Collections.LazyListModule.split``1(FSharpx.Collections.LazyList{``0},System.Int32)">
+<summary>
+ Splits the list at the gicen index.
+</summary>
+</member>
+<member name="M:FSharpx.Collections.LazyListModule.concat``1(FSharpx.Collections.LazyList{FSharpx.Collections.LazyList{``0}})">
+<summary>
+O(1). Return the list which contains on demand the list of elements of the list of lazy lists.
+</summary>
+</member>
+<member name="M:FSharpx.Collections.LazyListModule.zip``2(FSharpx.Collections.LazyList{``0},FSharpx.Collections.LazyList{``1})">
+<summary>
+O(1). Return the list which contains on demand the pair of elements of the first and second list
+</summary>
+</member>
+<member name="M:FSharpx.Collections.LazyListModule.append``1(FSharpx.Collections.LazyList{``0},FSharpx.Collections.LazyList{``0})">
+<summary>
+O(1). Return the list which contains on demand the elements of the first list followed
+ by the elements of the second list
+</summary>
+</member>
+<member name="M:FSharpx.Collections.LazyListModule.unfold``2(Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.FSharpOption{System.Tuple{``1,``0}}},``0)">
+<summary>
+O(1). Return a list that contains the elements returned by the given computation.
+ The given computation is not executed until the first element on the list is
+ consumed.  The given argument is passed to the computation.  Subsequent elements
+ in the list are generated by again applying the residual &apos;b to the computation.
+</summary>
+</member>
+<member name="M:FSharpx.Collections.LazyListModule.delayed``1(Microsoft.FSharp.Core.FSharpFunc{Microsoft.FSharp.Core.Unit,FSharpx.Collections.LazyList{``0}})">
+<summary>
+O(1). Return a list that is in effect the list returned by the given computation.
+ The given computation is not executed until the first element on the list is
+ consumed.
+</summary>
+</member>
+<member name="M:FSharpx.Collections.LazyListModule.repeat``1(``0)">
+<summary>
+O(1). Return the list which on consumption will consist of an infinite sequence of 
+ the given item
+</summary>
+</member>
+<member name="M:FSharpx.Collections.LazyListModule.consDelayed``1(``0,Microsoft.FSharp.Core.FSharpFunc{Microsoft.FSharp.Core.Unit,FSharpx.Collections.LazyList{``0}})">
+<summary>
+O(1). Return a new list which on consumption contains the given item 
+ followed by the list returned by the given computation.  The 
+</summary>
+</member>
+<member name="M:FSharpx.Collections.LazyListModule.cons``1(``0,FSharpx.Collections.LazyList{``0})">
+<summary>
+O(1). Return a new list which contains the given item followed by the
+ given list.
+</summary>
+</member>
+<member name="M:FSharpx.Collections.LazyListModule.length``1(FSharpx.Collections.LazyList{``0})">
+<summary>
+O(n). Return the length of the list
+</summary>
+</member>
+<member name="M:FSharpx.Collections.LazyListModule.empty``1">
+<summary>
+O(1). Evaluates to the list that contains no items
+</summary>
+</member>
+<member name="M:FSharpx.Collections.LazyListModule.find``1(Microsoft.FSharp.Core.FSharpFunc{``0,System.Boolean},FSharpx.Collections.LazyList{``0})">
+<summary>
+O(n), worst case. Return the first element for which the given function returns &lt;c&gt;true&lt;/c&gt;.
+ Raise &lt;c&gt;KeyNotFoundException&lt;/c&gt; if no such element exists.
+</summary>
+</member>
+<member name="M:FSharpx.Collections.LazyListModule.tryFind``1(Microsoft.FSharp.Core.FSharpFunc{``0,System.Boolean},FSharpx.Collections.LazyList{``0})">
+<summary>
+O(n), worst case. Apply the given function to successive elements of the list, returning the first
+ result where function returns &lt;c&gt;Some(x)&lt;/c&gt; for some x. If the function never returns
+ true, &apos;None&apos; is returned.
+</summary>
+</member>
+<member name="M:FSharpx.Collections.LazyListModule.mapAccum``3(Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.FSharpFunc{``1,System.Tuple{``0,``2}}},``0,FSharpx.Collections.LazyList{``1})">
+<summary>
+O(n). Behaves like a combination of map and fold; 
+ it applies a function to each element of a list, 
+ passing an accumulating parameter from left to right, 
+ and returning a final value of this accumulator together with the new list.
+</summary>
+</member>
+<member name="M:FSharpx.Collections.LazyListModule.fold``2(Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.FSharpFunc{``1,``0}},``0,FSharpx.Collections.LazyList{``1})">
+<summary>
+O(n). /// it applies a function to each element of a list,
+ passing an accumulating parameter from left to right,
+</summary>
+</member>
+<member name="M:FSharpx.Collections.LazyListModule.trySkip``1(System.Int32,FSharpx.Collections.LazyList{``0})">
+<summary>
+O(n), where n is count. Return option the list which skips the first &apos;n&apos; elements of 
+ the input list.  
+</summary>
+</member>
+<member name="M:FSharpx.Collections.LazyListModule.skip``1(System.Int32,FSharpx.Collections.LazyList{``0})">
+<summary>
+O(n), where n is count. Return the list which on consumption will skip the first &apos;n&apos; elements of 
+ the input list.  
+</summary>
+</member>
+<member name="M:FSharpx.Collections.LazyListModule.tryTake``1(System.Int32,FSharpx.Collections.LazyList{``0})">
+<summary>
+O(n), where n is count. Return the list which on consumption will consist of at most &apos;n&apos; elements of 
+ the input list.  
+</summary>
+</member>
+<member name="M:FSharpx.Collections.LazyListModule.drop``1(System.Int32,FSharpx.Collections.LazyList{``0})">
+<summary>
+O(n), where n is count. Return the list which on consumption will remove of at most &apos;n&apos; elements of 
+ the input list.  
+</summary>
+</member>
+<member name="M:FSharpx.Collections.LazyListModule.take``1(System.Int32,FSharpx.Collections.LazyList{``0})">
+<summary>
+O(n), where n is count. Return the list which on consumption will consist of at most &apos;n&apos; elements of 
+ the input list.  
+</summary>
+</member>
+<member name="M:FSharpx.Collections.LazyListModule.tryUncons``1(FSharpx.Collections.LazyList{``0})">
+<summary>
+O(1). Returns option tuple of head element and tail of the list.
+</summary>
+</member>
+<member name="M:FSharpx.Collections.LazyListModule.uncons``1(FSharpx.Collections.LazyList{``0})">
+<summary>
+O(1). Returns tuple of head element and tail of the list.
+</summary>
+</member>
+<member name="M:FSharpx.Collections.LazyListModule.tryTail``1(FSharpx.Collections.LazyList{``0})">
+<summary>
+O(1). Return option the list corresponding to the remaining items in the sequence.  
+ Forces the evaluation of the first cell of the list if it is not already evaluated.
+</summary>
+</member>
+<member name="M:FSharpx.Collections.LazyListModule.tail``1(FSharpx.Collections.LazyList{``0})">
+<summary>
+O(1). Return the list corresponding to the remaining items in the sequence.  
+ Forces the evaluation of the first cell of the list if it is not already evaluated.
+</summary>
+</member>
+<member name="M:FSharpx.Collections.LazyListModule.tryHead``1(FSharpx.Collections.LazyList{``0})">
+<summary>
+O(1). Return option the first element of the list.  Forces the evaluation of
+ the first cell of the list if it is not already evaluated.
+</summary>
+</member>
+<member name="M:FSharpx.Collections.LazyListModule.head``1(FSharpx.Collections.LazyList{``0})">
+<summary>
+O(1). Return the first element of the list.  Forces the evaluation of
+ the first cell of the list if it is not already evaluated.
+</summary>
+</member>
+<member name="M:FSharpx.Collections.LazyListModule.isEmpty``1(FSharpx.Collections.LazyList{``0})">
+<summary>
+O(1). Test if a list is empty.  Forces the evaluation of
+ the first element of the stream if it is not already evaluated.
+</summary>
+</member>
+<member name="T:Hedgehog.Seed">
+<summary>
+ Splittable random number generator.
+</summary>
+</member>
+<member name="T:Hedgehog.Tree`1">
+<summary>
+ A rose tree which represents a random generated outcome, and all the ways
+ in which it can be made smaller.
+</summary>
+</member>
+<member name="T:Hedgehog.Range`1">
+<summary>
+ A range describes the bounds of a number to generate, which may or may not
+ be dependent on a &apos;Size&apos;.
+</summary>
+</member>
+<member name="T:Hedgehog.Size">
+<summary>
+ Tests are parameterized by the `Size` of the randomly-generated data,
+ the meaning of which depends on the particular generator used.
+</summary>
+</member>
+<member name="T:Hedgehog.Random`1">
+<summary>
+ A generator for random values of type &apos;a
+</summary>
+</member>
+<member name="T:Hedgehog.Gen`1">
+<summary>
+ A generator for values and shrink trees of type &apos;a.
+</summary>
+</member>
+<member name="M:Hedgehog.Numeric.toBigInt``1(``0)">
+<summary>
+ Converts to a BigInt.
+</summary>
+</member>
+<member name="M:Hedgehog.Numeric.fromBigInt``1(System.Numerics.BigInteger)">
+<summary>
+ Converts from a BigInt to the inferred destination type.
+</summary>
+</member>
+<member name="M:Hedgehog.Numeric.maxValue``1">
+<summary>
+ Returns the largest possible value.
+</summary>
+</member>
+<member name="M:Hedgehog.Numeric.minValue``1">
+<summary>
+ Returns the smallest possible value.
+</summary>
+</member>
+<member name="M:Hedgehog.SeedModule.split(Hedgehog.Seed)">
+<summary>
+ Splits a random number generator in to two.
+</summary>
+</member>
+<member name="M:Hedgehog.SeedModule.nextDouble(System.Double,System.Double,Hedgehog.Seed)">
+<summary>
+ Generates a random double in the specified range.
+</summary>
+</member>
+<member name="M:Hedgehog.SeedModule.nextBigInt(System.Numerics.BigInteger,System.Numerics.BigInteger,Hedgehog.Seed)">
+<summary>
+ Generates a random bigint in the specified range.
+</summary>
+</member>
+<member name="M:Hedgehog.SeedModule.next(Hedgehog.Seed)">
+<summary>
+ Returns the next pseudo-random number in the sequence, and a new seed.
+</summary>
+</member>
+<member name="P:Hedgehog.SeedModule.range">
+<summary>
+ The possible range of values returned from &apos;next&apos;.
+</summary>
+</member>
+<member name="M:Hedgehog.SeedModule.random">
+<summary>
+ Create a new random &apos;Seed&apos;.
+</summary>
+</member>
+<member name="M:Hedgehog.SeedModule.ofInt32(System.Int32)">
+<summary>
+ Create a new &apos;Seed&apos; from a 32-bit integer.
+</summary>
+</member>
+<member name="P:Hedgehog.SeedModule.goldenGamma">
+<summary>
+ A predefined gamma value&apos;s needed for initializing the &quot;root&quot;
+ instances of SplittableRandom that is, instances not produced
+ by splitting an already existing instance. We choose: the odd
+ integer closest to 2^64/φ, where φ = (1 + √5)/2 is the golden
+ ratio, and call it GOLDEN_GAMMA.
+</summary>
+</member>
+<member name="M:Hedgehog.Tree.filterForest``1(Microsoft.FSharp.Core.FSharpFunc{``0,System.Boolean},FSharpx.Collections.LazyList{Hedgehog.Tree{``0}})">
+<summary>
+ Recursively discard any trees whose outcome does not pass the predicate.
+</summary>
+</member>
+<member name="M:Hedgehog.Tree.filter``1(Microsoft.FSharp.Core.FSharpFunc{``0,System.Boolean},Hedgehog.Tree{``0})">
+<summary>
+ Recursively discard any shrinks whose outcome does not pass the predicate.
+ Note that the root outcome can never be discarded.
+</summary>
+</member>
+<member name="M:Hedgehog.Tree.expand``1(Microsoft.FSharp.Core.FSharpFunc{``0,FSharpx.Collections.LazyList{``0}},Hedgehog.Tree{``0})">
+<summary>
+ Apply an additional unfolding function to an existing tree.
+
+ The root outcome remains intact, only the shrinks are affected, this
+ applies recursively, so shrinks can only ever be added using this
+ function.
+
+ If you want to replace the shrinks altogether, try:
+
+ Tree.unfold f (outcome oldTree)
+
+</summary>
+</member>
+<member name="M:Hedgehog.Tree.unfoldForest``2(Microsoft.FSharp.Core.FSharpFunc{``0,``1},Microsoft.FSharp.Core.FSharpFunc{``0,FSharpx.Collections.LazyList{``0}},``0)">
+<summary>
+ Build a list of trees from an unfolding function and a seed value.
+</summary>
+</member>
+<member name="M:Hedgehog.Tree.unfold``2(Microsoft.FSharp.Core.FSharpFunc{``0,``1},Microsoft.FSharp.Core.FSharpFunc{``0,FSharpx.Collections.LazyList{``0}},``0)">
+<summary>
+ Build a tree from an unfolding function and a seed value.
+</summary>
+</member>
+<member name="M:Hedgehog.Tree.foldForest``3(Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.FSharpFunc{``1,``2}},Microsoft.FSharp.Core.FSharpFunc{FSharpx.Collections.LazyList{``2},``1},FSharpx.Collections.LazyList{Hedgehog.Tree{``0}})">
+<summary>
+ Fold over a list of trees.
+</summary>
+</member>
+<member name="M:Hedgehog.Tree.fold``3(Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.FSharpFunc{``1,``2}},Microsoft.FSharp.Core.FSharpFunc{FSharpx.Collections.LazyList{``2},``1},Hedgehog.Tree{``0})">
+<summary>
+ Fold over a tree.
+</summary>
+</member>
+<member name="M:Hedgehog.Tree.duplicate``1(Hedgehog.Tree{``0})">
+<summary>
+ Turns a tree, in to a tree of trees. Useful for testing Hedgehog itself as
+ it allows you to observe the shrinks for a value inside a property,
+ while still allowing the property to shrink to a minimal
+ counterexample.
+</summary>
+</member>
+<member name="M:Hedgehog.Tree.map``2(Microsoft.FSharp.Core.FSharpFunc{``0,``1},Hedgehog.Tree{``0})">
+<summary>
+ Map over a tree.
+</summary>
+</member>
+<member name="M:Hedgehog.Tree.singleton``1(``0)">
+<summary>
+ Create a tree with a single outcome and no shrinks.
+</summary>
+</member>
+<member name="M:Hedgehog.Tree.shrinks``1(Hedgehog.Tree{``0})">
+<summary>
+ All the possible shrinks of this outcome. This should be ordered
+ smallest to largest as if property still fails with the first shrink in
+ the list then we will commit to that path and none of the others will
+ be tried (i.e. there is no backtracking).
+</summary>
+</member>
+<member name="M:Hedgehog.Tree.outcome``1(Hedgehog.Tree{``0})">
+<summary>
+ The generated outcome.
+</summary>
+</member>
+<member name="M:Hedgehog.Range.ExponentialBounded``1">
+<summary>
+ Construct a range which is scaled exponentially relative to the size
+ parameter and uses the full range of a data type.
+</summary>
+</member>
+<member name="M:Hedgehog.Range.Exponential``1(``0,``0)">
+<summary>
+ Construct a range which scales the second bound exponentially relative
+ to the size parameter.
+</summary>
+</member>
+<member name="M:Hedgehog.Range.ExponentialFrom``1(``0,``0,``0)">
+<summary>
+ Construct a range which scales the bounds exponentially relative to the
+ size parameter.
+</summary>
+</member>
+<member name="M:Hedgehog.Range.LinearBounded``1">
+<summary>
+ Construct a range which is scaled relative to the size parameter and
+ uses the full range of a data type.
+</summary>
+</member>
+<member name="M:Hedgehog.Range.Linear``1(``0,``0)">
+<summary>
+ Construct a range which scales the second bound relative to the size
+ parameter.
+</summary>
+</member>
+<member name="M:Hedgehog.Range.LinearFrom``1(``0,``0,``0)">
+<summary>
+ Construct a range which scales the bounds relative to the size
+ parameter.
+</summary>
+</member>
+<member name="M:Hedgehog.Range.ConstantBounded``1">
+<summary>
+ Construct a range which is unaffected by the size parameter using the
+ full range of a data type.
+</summary>
+</member>
+<member name="M:Hedgehog.Range.Constant``1(``0,``0)">
+<summary>
+ Construct a range which is unaffected by the size parameter.
+</summary>
+</member>
+<member name="M:Hedgehog.Range.ConstantFrom``1(``0,``0,``0)">
+<summary>
+ Construct a range which is unaffected by the size parameter with a
+ origin point which may differ from the bounds.
+</summary>
+</member>
+<member name="M:Hedgehog.Range.Singleton``1(``0)">
+<summary>
+ Construct a range which represents a constant single value.
+</summary>
+</member>
+<member name="M:Hedgehog.Range.UpperBound``1(System.Int32,Hedgehog.Range{``0})">
+<summary>
+ Get the upper bound of a range for the given size.
+</summary>
+</member>
+<member name="M:Hedgehog.Range.LowerBound``1(System.Int32,Hedgehog.Range{``0})">
+<summary>
+ Get the lower bound of a range for the given size.
+</summary>
+</member>
+<member name="M:Hedgehog.Range.Bounds``1(System.Int32,Hedgehog.Range{``0})">
+<summary>
+ Get the extents of a range, for a given size.
+</summary>
+</member>
+<member name="M:Hedgehog.Range.Origin``1(Hedgehog.Range{``0})">
+<summary>
+ Get the origin of a range. This might be the mid-point or the lower
+ bound, depending on what the range represents.
+
+ The &apos;bounds&apos; of a range are scaled around this value when using the
+ &apos;linear&apos; family of combinators.
+
+ When using a &apos;Range&apos; to generate numbers, the shrinking function will
+ shrink towards the origin.
+</summary>
+</member>
+<member name="M:Hedgehog.Range.Internal.scaleExponential``1(System.Int32,``0,``0)">
+<summary>
+ Scale an integral exponentially with the size parameter.
+</summary>
+</member>
+<member name="M:Hedgehog.Range.Internal.scaleLinear``1(System.Int32,``0,``0)">
+<summary>
+ Scale an integral linearly with the size parameter.
+</summary>
+</member>
+<member name="M:Hedgehog.Range.Internal.clamp``1(``0,``0,``0)">
+<summary>
+ Truncate a value so it stays within some range.
+</summary>
+</member>
+<member name="M:Hedgehog.Random.double(Hedgehog.Range{System.Double})">
+<summary>
+ Generates a random floating point number in the given inclusive range.
+</summary>
+</member>
+<member name="M:Hedgehog.Random.integral``1(Hedgehog.Range{``0})">
+<summary>
+ Generates a random integral number in the given inclusive range.
+</summary>
+</member>
+<member name="M:Hedgehog.Random.resize``1(System.Int32,Hedgehog.Random{``0})">
+<summary>
+ Overrides the size parameter. Returns a generator which uses the
+ given size instead of the runtime-size parameter.
+</summary>
+</member>
+<member name="M:Hedgehog.Random.sized``1(Microsoft.FSharp.Core.FSharpFunc{System.Int32,Hedgehog.Random{``0}})">
+<summary>
+ Used to construct generators that depend on the size parameter.
+</summary>
+</member>
+<member name="M:Hedgehog.Shrink.towardsDouble(System.Double,System.Double)">
+<summary>
+ Shrink a floating-point number by edging towards a destination.
+ Note we always try the destination first, as that is the optimal shrink.
+</summary>
+</member>
+<member name="M:Hedgehog.Shrink.towards``1(``0,``0)">
+<summary>
+ Shrink an integral number by edging towards a destination.
+</summary>
+</member>
+<member name="M:Hedgehog.Shrink.sequenceElems``1(Microsoft.FSharp.Collections.FSharpList{Hedgehog.Tree{``0}})">
+<summary>
+ Turn a list of trees in to a tree of lists, opting to shrink only the
+ elements of the list (i.e. the size of the list will always be the same).
+</summary>
+</member>
+<member name="M:Hedgehog.Shrink.sequenceList``1(Microsoft.FSharp.Collections.FSharpList{Hedgehog.Tree{``0}})">
+<summary>
+ Turn a list of trees in to a tree of lists, opting to shrink both the list
+ itself and the elements in the list during traversal.
+</summary>
+</member>
+<member name="M:Hedgehog.Shrink.sequence``1(Microsoft.FSharp.Core.FSharpFunc{Microsoft.FSharp.Collections.FSharpList{Hedgehog.Tree{``0}},FSharpx.Collections.LazyList{Microsoft.FSharp.Collections.FSharpList{Hedgehog.Tree{``0}}}},Microsoft.FSharp.Collections.FSharpList{Hedgehog.Tree{``0}})">
+<summary>
+ Turn a list of trees in to a tree of lists, using the supplied function to
+ merge shrinking options.
+</summary>
+</member>
+<member name="M:Hedgehog.Shrink.elems``1(Microsoft.FSharp.Core.FSharpFunc{``0,FSharpx.Collections.LazyList{``0}},Microsoft.FSharp.Collections.FSharpList{``0})">
+<summary>
+ Shrink each of the elements in input list using the supplied shrinking
+ function.
+</summary>
+</member>
+<member name="M:Hedgehog.Shrink.list``1(Microsoft.FSharp.Collections.FSharpList{``0})">
+<summary>
+ Shrink a list by edging towards the empty list.
+ Note we always try the empty list first, as that is the optimal shrink.
+</summary>
+</member>
+<member name="M:Hedgehog.Shrink.halves``1(``0)">
+<summary>
+ Produce a list containing the progressive halving of an integral.
+</summary>
+</member>
+<member name="M:Hedgehog.Shrink.removes``1(System.Int32,Microsoft.FSharp.Collections.FSharpList{``0})">
+<summary>
+ Produce all permutations of removing &apos;k&apos; elements from a list.
+</summary>
+</member>
+<member name="M:Hedgehog.Gen.GenerateTree``1(Hedgehog.Gen{``0})">
+<summary>
+ Run a generator. The size passed to the generator is always 30;
+ if you want another size then you should explicitly use &apos;resize&apos;.
+</summary>
+</member>
+<member name="P:Hedgehog.Gen.DateTime">
+<summary>
+ Generates a random instant in time expressed as a date and time of day.
+</summary>
+</member>
+<member name="P:Hedgehog.Gen.Guid">
+<summary>
+ Generates a random globally unique identifier.
+</summary>
+</member>
+<member name="M:Hedgehog.Gen.Float(Hedgehog.Range{System.Double})">
+<summary>
+ Generates a random 64-bit floating point number.
+</summary>
+</member>
+<member name="M:Hedgehog.Gen.Double(Hedgehog.Range{System.Double})">
+<summary>
+ Generates a random 64-bit floating point number.
+</summary>
+</member>
+<member name="M:Hedgehog.Gen.UInt64(Hedgehog.Range{System.UInt64})">
+<summary>
+ Generates a random unsigned 64-bit integer.
+</summary>
+</member>
+<member name="M:Hedgehog.Gen.Int64(Hedgehog.Range{System.Int64})">
+<summary>
+ Generates a random signed 64-bit integer.
+</summary>
+</member>
+<member name="M:Hedgehog.Gen.UInt32(Hedgehog.Range{System.UInt32})">
+<summary>
+ Generates a random unsigned 32-bit integer.
+</summary>
+</member>
+<member name="M:Hedgehog.Gen.Int32(Hedgehog.Range{System.Int32})">
+<summary>
+ Generates a random signed 32-bit integer.
+</summary>
+</member>
+<member name="M:Hedgehog.Gen.UInt16(Hedgehog.Range{System.UInt16})">
+<summary>
+ Generates a random unsigned 16-bit integer.
+</summary>
+</member>
+<member name="M:Hedgehog.Gen.Int16(Hedgehog.Range{System.Int16})">
+<summary>
+ Generates a random signed 16-bit integer.
+</summary>
+</member>
+<member name="M:Hedgehog.Gen.SByte(Hedgehog.Range{System.SByte})">
+<summary>
+ Generates a random signed byte.
+</summary>
+</member>
+<member name="M:Hedgehog.Gen.Byte(Hedgehog.Range{System.Byte})">
+<summary>
+ Generates a random byte.
+</summary>
+</member>
+<member name="P:Hedgehog.Gen.Bool">
+<summary>
+ Generates a random boolean.
+</summary>
+</member>
+<member name="M:Hedgehog.Gen.String(Hedgehog.Range{System.Int32},Hedgehog.Gen{System.Char})">
+<summary>
+ Generates a random string using &apos;Range&apos; to determine the length and the
+ specified character generator.
+</summary>
+</member>
+<member name="P:Hedgehog.Gen.Unicode">
+<summary>
+ Generates a Unicode character, excluding invalid standalone surrogates:
+ &apos;\000&apos;..&apos;\65535&apos; (excluding &apos;\55296&apos;..&apos;\57343&apos;)
+</summary>
+</member>
+<member name="P:Hedgehog.Gen.Latin1">
+<summary>
+ Generates a Latin-1 character: &apos;\000&apos;..&apos;\255&apos;
+</summary>
+</member>
+<member name="P:Hedgehog.Gen.Ascii">
+<summary>
+ Generates an ASCII character: &apos;\000&apos;..&apos;\127&apos;
+</summary>
+</member>
+<member name="P:Hedgehog.Gen.UnicodeAll">
+<summary>
+ Generates a Unicode character, including invalid standalone surrogates:
+ &apos;\000&apos;..&apos;\65535&apos;
+</summary>
+</member>
+<member name="M:Hedgehog.Gen.Enumerable``1(Hedgehog.Range{System.Int32},Hedgehog.Gen{``0})">
+<summary>
+ Generates a sequence using a &apos;Range&apos; to determine the length.
+</summary>
+</member>
+<member name="M:Hedgehog.Gen.Array``1(Hedgehog.Range{System.Int32},Hedgehog.Gen{``0})">
+<summary>
+ Generates an array using a &apos;Range&apos; to determine the length.
+</summary>
+</member>
+<member name="M:Hedgehog.Gen.List``1(Hedgehog.Range{System.Int32},Hedgehog.Gen{``0})">
+<summary>
+ Generates a list using a &apos;Range&apos; to determine the length.
+</summary>
+</member>
+<member name="M:Hedgehog.Gen.Option``1(Hedgehog.Gen{``0})">
+<summary>
+ Generates a &apos;None&apos; part of the time.
+</summary>
+</member>
+<member name="M:Hedgehog.Gen.Some``1(Hedgehog.Gen{Microsoft.FSharp.Core.FSharpOption{``0}})">
+<summary>
+ Runs an option generator until it produces a &apos;Some&apos;.
+</summary>
+</member>
+<member name="M:Hedgehog.Gen.TryFilter``1(Microsoft.FSharp.Core.FSharpFunc{``0,System.Boolean},Hedgehog.Gen{``0})">
+<summary>
+ Tries to generate a value that satisfies a predicate.
+</summary>
+</member>
+<member name="M:Hedgehog.Gen.Filter``1(Microsoft.FSharp.Core.FSharpFunc{``0,System.Boolean},Hedgehog.Gen{``0})">
+<summary>
+ Generates a value that satisfies a predicate.
+</summary>
+</member>
+<member name="M:Hedgehog.Gen.tryFilterRandom``1(Microsoft.FSharp.Core.FSharpFunc{``0,System.Boolean},Hedgehog.Random{Hedgehog.Tree{``0}})">
+<summary>
+ More or less the same logic as suchThatMaybe from QuickCheck, except
+ modified to ensure that the shrinks also obey the predicate.
+</summary>
+</member>
+<member name="M:Hedgehog.Gen.ChoiceRecursive``1(System.Collections.Generic.IEnumerable{Hedgehog.Gen{``0}},System.Collections.Generic.IEnumerable{Hedgehog.Gen{``0}})">
+<summary>
+ Randomly selects from one of the gens in either the non-recursive or the
+ recursive list. When a selection is made from the recursive list, the size
+ is halved. When the size gets to one or less, selections are no longer made
+ from the recursive list.
+ &lt;i&gt;The first argument (i.e. the non-recursive input list) must be non-empty.&lt;/i&gt;
+</summary>
+</member>
+<member name="M:Hedgehog.Gen.Choice``1(System.Collections.Generic.IEnumerable{Hedgehog.Gen{``0}})">
+<summary>
+ Randomly selects one of the gens in the list.
+ &lt;i&gt;The input list must be non-empty.&lt;/i&gt;
+</summary>
+</member>
+<member name="M:Hedgehog.Gen.Frequency``1(System.Collections.Generic.IEnumerable{System.Tuple{System.Int32,Hedgehog.Gen{``0}}})">
+<summary>
+ Uses a weighted distribution to randomly select one of the gens in the list.
+ &lt;i&gt;The input list must be non-empty.&lt;/i&gt;
+</summary>
+</member>
+<member name="M:Hedgehog.Gen.Item``1(System.Collections.Generic.IEnumerable{``0})">
+<summary>
+ Randomly selects one of the values in the list.
+ &lt;i&gt;The input list must be non-empty.&lt;/i&gt;
+</summary>
+</member>
+<member name="M:Hedgehog.Gen.Integral``1(Hedgehog.Range{``0})">
+<summary>
+ Generates a random number in the given inclusive range.
+</summary>
+</member>
+<member name="M:Hedgehog.Gen.Scale``1(Microsoft.FSharp.Core.FSharpFunc{System.Int32,System.Int32},Hedgehog.Gen{``0})">
+<summary>
+ Adjust the size parameter, by transforming it with the given
+ function.
+</summary>
+</member>
+<member name="M:Hedgehog.Gen.Resize``1(System.Int32,Hedgehog.Gen{``0})">
+<summary>
+ Overrides the size parameter. Returns a generator which uses the
+ given size instead of the runtime-size parameter.
+</summary>
+</member>
+<member name="M:Hedgehog.Gen.Sized``1(Microsoft.FSharp.Core.FSharpFunc{System.Int32,Hedgehog.Gen{``0}})">
+<summary>
+ Used to construct generators that depend on the size parameter.
+</summary>
+</member>
+<member name="M:Hedgehog.Gen.Shrink``1(Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Collections.FSharpList{``0}},Hedgehog.Gen{``0})">
+<summary>
+ Apply an additional shrinker to all generated trees.
+</summary>
+</member>
+<member name="M:Hedgehog.Gen.ShrinkLazy``1(Microsoft.FSharp.Core.FSharpFunc{``0,FSharpx.Collections.LazyList{``0}},Hedgehog.Gen{``0})">
+<summary>
+ Apply an additional shrinker to all generated trees.
+</summary>
+</member>
+<member name="M:Hedgehog.Gen.NoShrink``1(Hedgehog.Gen{``0})">
+<summary>
+ Prevent a &apos;Gen&apos; from shrinking.
+</summary>
+</member>
+<member name="M:Hedgehog.Property.fromThrowing``1(Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.Unit},``0)">
+<summary>
+ Converts a possibly-throwing function to
+ a property by treating &quot;no exception&quot; as success.
+</summary>
+</member>
+</members>
+</doc>
