@@ -37,7 +37,7 @@ namespace Ploeh.Samples.UserManagement.UnitTests
             User otherUser,
             ConnectionsController sut)
         {
-            Assert.False(int.TryParse(userId, out var _));
+            Assert.False(int.TryParse(userId, out _));
             db.Add(otherUser);
             db.IsDirty = false;
 
@@ -55,7 +55,7 @@ namespace Ploeh.Samples.UserManagement.UnitTests
             string otherUserId,
             ConnectionsController sut)
         {
-            Assert.False(int.TryParse(otherUserId, out var _));
+            Assert.False(int.TryParse(otherUserId, out _));
             db.Add(user);
             db.IsDirty = false;
 
