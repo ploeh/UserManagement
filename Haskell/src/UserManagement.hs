@@ -1,4 +1,3 @@
-{-# LANGUAGE DeriveFunctor #-}
 {-# LANGUAGE LambdaCase #-}
 module UserManagement where
 
@@ -7,7 +6,7 @@ import Data.Either
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Except
 
-data HttpResponse a = OK a | BadRequest String deriving (Show, Eq, Functor)
+data HttpResponse a = OK a | BadRequest String
 
 isOK :: HttpResponse a -> Bool
 isOK (OK _) = True
@@ -22,7 +21,7 @@ data User = User { userId :: Integer, connectedUsers :: [User] } deriving (Show,
 addConnection :: User -> User -> User
 addConnection (User i cns) otherUser = User i $ otherUser : cns
 
-data UserLookupError = InvalidId | NotFound deriving (Show, Eq)
+data UserLookupError = InvalidId | NotFound
 
 post :: Monad m =>
         (a -> m (Either UserLookupError User)) ->
