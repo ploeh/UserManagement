@@ -15,7 +15,7 @@ isOK     _  = False
 
 isBadRequest :: HttpResponse a -> Bool
 isBadRequest (BadRequest _) = True
-isBadRequest             _  = True
+isBadRequest             _  = False
 
 data User = User { userId :: Integer, connectedUsers :: [User] } deriving (Show, Eq)
 
