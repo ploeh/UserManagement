@@ -18,10 +18,7 @@ namespace Ploeh.Samples.UserManagement
 
         public int Id { get; }
 
-        public IReadOnlyCollection<int> Connections
-        {
-            get { return connections; }
-        }
+        public IReadOnlyCollection<int> Connections => connections;
 
         public void Connect(User otherUser)
         {
